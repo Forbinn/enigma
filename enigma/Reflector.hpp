@@ -10,7 +10,7 @@ class ENIGMA_EXPORT Reflector
 {
 public:
     Reflector() = default;
-    explicit Reflector(const string & alphabet);
+    Reflector(const string & alphabet);
 
     bool isValid() const;
 
