@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Rotor.hpp"
 
 Enigma::Rotor::Rotor(const string & input, const string & output)

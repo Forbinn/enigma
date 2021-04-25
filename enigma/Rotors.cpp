@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Rotors.hpp"
 
 bool Enigma::Rotors::isValid() const
