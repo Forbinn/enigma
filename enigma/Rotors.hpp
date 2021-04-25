@@ -38,6 +38,14 @@ public:
     std::vector<string> intermediateAlphabets() const;
 
 public:
+    void setRotorsOffset(const std::vector<std::size_t> & offsets);
+    void setRotorOffset(std::size_t offset, std::size_t index);
+
+    std::size_t rotorOffset(std::size_t index) const;
+    std::vector<std::size_t> rotorsOffset() const;
+    std::size_t rotorCount() const { return _rotors.size(); }
+
+public:
     value_type convert(value_type c);
 
 public:

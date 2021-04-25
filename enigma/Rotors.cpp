@@ -130,6 +130,40 @@ std::vector<Enigma::string> Enigma::Rotors::intermediateAlphabets() const
     return alphabets;
 }
 
+void Enigma::Rotors::setRotorsOffset(const std::vector<std::size_t> & offsets)
+{
+    if (offsets.size() < _rotors.size())
+        return ;
+
+    std::size_t i = 0;
+    for (auto & rotor : _rotors)
+        rotor.setOffset(offsets.at(i++));
+}
+
+void Enigma::Rotors::setRotorOffset(std::size_t offset, std::size_t index)
+{
+    if (index >= _rotors.size())
+        return ;
+    std::next(_rotors.begin(), index)->setOffset(offset);
+}
+
+std::size_t Enigma::Rotors::rotorOffset(std::size_t index) const
+{
+    if (index >= _rotors.size())
+        return 0;
+    return std::next(_rotors.begin(), index)->offset();
+}
+
+std::vector<std::size_t> Enigma::Rotors::rotorsOffset() const
+{
+    std::vector<std::size_t> offsets;
+    offsets.reserve(_rotors.size());
+
+    for (const auto & rotor : _rotors)
+        offsets.emplace_back(rotor.offset());
+    return offsets;
+}
+
 Enigma::value_type Enigma::Rotors::convert(value_type c)
 {
     if (!isValid())
