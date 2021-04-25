@@ -1,5 +1,15 @@
 #include "PlugBoard.hpp"
 
+bool Enigma::PlugBoard::isValidForAlphabet(const string & alphabet) const
+{
+    // All mapping values must appear in the alphabet for it to be valid
+    for (const auto & p : _mapping)
+        if (alphabet.find(p.first) == string::npos)
+            return false;
+
+    return true;
+}
+
 void Enigma::PlugBoard::addMapping(value_type v1, value_type v2)
 {
     if (v1 == v2)

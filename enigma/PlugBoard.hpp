@@ -1,8 +1,8 @@
 #pragma once
 
-#include "enigma_global.hpp"
-
 #include <unordered_map>
+
+#include "enigma_global.hpp"
 
 namespace Enigma
 {
@@ -13,6 +13,8 @@ public:
 
 public:
     PlugBoard() = default;
+
+    bool isValidForAlphabet(const string & alphabet) const;
 
     const container & mapping() const { return _mapping; }
 
