@@ -4,6 +4,9 @@
 
 bool Enigma::Rotors::isValid() const
 {
+    if (_rotors.empty() || !_reflector.isValid())
+        return false;
+
     return std::all_of(_rotors.begin(), _rotors.end(),
                        [](const auto & rotor){ return rotor.isValid(); });
 }
@@ -18,7 +21,7 @@ Enigma::value_type Enigma::Rotors::convert(value_type c)
     for (auto itr = _rotors.begin(); itr != _rotors.end(); ++itr)
         c = itr->convertFromInput(c);
 
-    c = _reflector.map(c);
+    c = _reflector.convert(c);
 
     for (auto itr = _rotors.rbegin(); itr != _rotors.rend(); ++itr)
         c = itr->convertToInput(c);

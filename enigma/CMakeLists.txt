@@ -11,6 +11,7 @@ add_library(enigma SHARED
   Rotor.cpp
   PlugBoard.cpp
   PlugBoard.hpp
+  Reflector.cpp
   Reflector.hpp
   Rotors.cpp
   Rotors.hpp
