@@ -9,6 +9,9 @@ add_library(enigma SHARED
   enigma_global.hpp
   Rotor.hpp
   Rotor.cpp
+  PlugBoard.cpp
+  PlugBoard.hpp
+  Reflector.hpp
 )
 
 target_compile_definitions(enigma PRIVATE ENIGMA_LIBRARY)
