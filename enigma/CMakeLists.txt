@@ -12,6 +12,8 @@ add_library(enigma SHARED
   PlugBoard.cpp
   PlugBoard.hpp
   Reflector.hpp
+  Rotors.cpp
+  Rotors.hpp
 )
 
 target_compile_definitions(enigma PRIVATE ENIGMA_LIBRARY)
