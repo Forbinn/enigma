@@ -2,6 +2,11 @@
 
 #include "Rotors.hpp"
 
+namespace
+{
+using difference_type = typename Enigma::Rotors::container::iterator::difference_type;
+} // !namespace
+
 Enigma::Rotors::Rotors(const string & inputAlphabet,
                        const string & outputAlphabet)
     : _inputAlphabet  { inputAlphabet }
@@ -9,15 +14,6 @@ Enigma::Rotors::Rotors(const string & inputAlphabet,
     , _rotors         { { inputAlphabet, outputAlphabet } }
     , _reflector      { outputAlphabet }
 {
-}
-
-bool Enigma::Rotors::isValid() const
-{
-    if (_rotors.empty() || !_reflector.isValid())
-        return false;
-
-    return std::all_of(_rotors.begin(), _rotors.end(),
-                       [](const auto & rotor){ return rotor.isValid(); });
 }
 
 void Enigma::Rotors::setInputAlphabet(const string & inputAlphabet)
@@ -30,6 +26,7 @@ void Enigma::Rotors::setInputAlphabet(const string & inputAlphabet)
         _rotors.emplace_back(_inputAlphabet, _outputAlphabet);
 
     reset();
+    _refreshIsValid();
 }
 
 void Enigma::Rotors::setOutputAlphabet(const string & outputAlphabet)
@@ -43,6 +40,7 @@ void Enigma::Rotors::setOutputAlphabet(const string & outputAlphabet)
 
     _reflector.setAlphabet(_outputAlphabet);
     reset();
+    _refreshIsValid();
 }
 
 void Enigma::Rotors::setIntermediateAlphabets(const std::vector<Enigma::string> & alphabets)
@@ -59,6 +57,8 @@ void Enigma::Rotors::setIntermediateAlphabets(const std::vector<Enigma::string> 
         itr->setOutputAlphabet(alphabet);
         ++itr;
     }
+
+    _refreshIsValid();
 }
 
 void Enigma::Rotors::appendIntermediateAlphabet(const string & alphabet)
@@ -83,13 +83,14 @@ void Enigma::Rotors::insertIntermediateAlphabet(const string & alphabet, std::si
     // The output of the new rotor become the input of the next rotor
     // or the global output if it is inserted at the end
 
-    const auto previousRotorItr       = std::next(_rotors.begin(), index);
+    const auto previousRotorItr       = std::next(_rotors.begin(), static_cast<difference_type>(index));
     const auto nextRotorItr           = std::next(previousRotorItr);
     const auto newRotorOutputAlphabet = nextRotorItr == _rotors.end() ? _outputAlphabet
                                                                       : nextRotorItr->inputAlphabet();
 
     previousRotorItr->setOutputAlphabet(alphabet);
     _rotors.emplace(nextRotorItr, alphabet, newRotorOutputAlphabet);
+    _refreshIsValid();
 }
 
 void Enigma::Rotors::removeIntermediateAlphabet(std::size_t index)
@@ -97,11 +98,12 @@ void Enigma::Rotors::removeIntermediateAlphabet(std::size_t index)
     if (index >= intermediateAlphabetCount())
         return ;
 
-    const auto currentRotorItr = std::next(_rotors.begin(), index);
+    const auto currentRotorItr = std::next(_rotors.begin(), static_cast<difference_type>(index));
     const auto nextRotorItr    = std::next(currentRotorItr);
 
     currentRotorItr->setOutputAlphabet(nextRotorItr->outputAlphabet());
     _rotors.erase(nextRotorItr);
+    _refreshIsValid();
 }
 
 Enigma::string Enigma::Rotors::intermediateAlphabet(std::size_t index) const
@@ -109,7 +111,7 @@ Enigma::string Enigma::Rotors::intermediateAlphabet(std::size_t index) const
     if (index >= intermediateAlphabetCount())
         return {};
 
-    return std::next(_rotors.begin(), index)->outputAlphabet();
+    return std::next(_rotors.begin(), static_cast<difference_type>(index))->outputAlphabet();
 }
 
 std::size_t Enigma::Rotors::intermediateAlphabetCount() const
@@ -144,14 +146,14 @@ void Enigma::Rotors::setRotorOffset(std::size_t offset, std::size_t index)
 {
     if (index >= _rotors.size())
         return ;
-    std::next(_rotors.begin(), index)->setOffset(offset);
+    std::next(_rotors.begin(), static_cast<difference_type>(index))->setOffset(offset);
 }
 
 std::size_t Enigma::Rotors::rotorOffset(std::size_t index) const
 {
     if (index >= _rotors.size())
         return 0;
-    return std::next(_rotors.begin(), index)->offset();
+    return std::next(_rotors.begin(), static_cast<difference_type>(index))->offset();
 }
 
 std::vector<std::size_t> Enigma::Rotors::rotorsOffset() const
@@ -188,6 +190,7 @@ void Enigma::Rotors::clear()
     _outputAlphabet.clear();
     _rotors.clear();
     _reflector.clear();
+    _isValid = false;
 }
 
 void Enigma::Rotors::clearIntermediateAlphabet()
@@ -198,6 +201,7 @@ void Enigma::Rotors::clearIntermediateAlphabet()
     for (auto itr = std::next(_rotors.begin()); itr != _rotors.end();)
         itr = _rotors.erase(itr);
     _rotors.front().setOutputAlphabet(_outputAlphabet);
+    _refreshIsValid();
 }
 
 void Enigma::Rotors::reset()
@@ -211,4 +215,16 @@ void Enigma::Rotors::_rotateRotors()
     for (auto & rotor : _rotors)
         if (rotor.rotate() == 0)
             break;
+}
+
+void Enigma::Rotors::_refreshIsValid()
+{
+    _isValid = [this]
+    {
+        if (_rotors.empty() || !_reflector.isValid())
+            return false;
+
+        return std::all_of(_rotors.begin(), _rotors.end(),
+                           [](const auto & rotor){ return rotor.isValid(); });
+    }();
 }

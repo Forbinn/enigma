@@ -19,7 +19,7 @@ public:
     Rotors(const string & inputAlphabet,
            const string & outputAlphabet);
 
-    bool isValid() const;
+    bool isValid() const { return _isValid; }
 
 public:
     void setInputAlphabet(const string & inputAlphabet);
@@ -55,6 +55,7 @@ public:
 
 private:
     void _rotateRotors();
+    void _refreshIsValid();
 
 private:
     string    _inputAlphabet;
@@ -62,5 +63,7 @@ private:
 
     container _rotors;
     Reflector _reflector;
+
+    bool      _isValid = false;
 };
 } // !namespace Enigma
