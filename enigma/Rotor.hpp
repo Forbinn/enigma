@@ -27,6 +27,7 @@ public:
     value_type convertToInput(value_type c) const;
 
 public:
+    void clear();
     void reset();
 
 private:

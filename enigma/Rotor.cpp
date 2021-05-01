@@ -95,6 +95,14 @@ Enigma::value_type Enigma::Rotor::convertToInput(value_type c) const
     return _inputAlphabet.at(idx);
 }
 
+void Enigma::Rotor::clear()
+{
+    _inputAlphabet.clear();
+    _outputAlphabet.clear();
+    _offset = 0;
+    _isValid = false;
+}
+
 void Enigma::Rotor::reset()
 {
     _offset = 0;
