@@ -14,6 +14,7 @@ Enigma::Rotors::Rotors(const string & inputAlphabet,
     , _rotors         { { inputAlphabet, outputAlphabet } }
     , _reflector      { outputAlphabet }
 {
+    _refreshIsValid();
 }
 
 void Enigma::Rotors::setInputAlphabet(const string & inputAlphabet)
