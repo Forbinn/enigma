@@ -15,6 +15,9 @@ void Enigma::PlugBoard::addMapping(value_type v1, value_type v2)
     if (v1 == v2)
         return ;
 
+    removeMapping(v1);
+    removeMapping(v2);
+
     _mapping[v1] = v2;
     _mapping[v2] = v1;
 }
