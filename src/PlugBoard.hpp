@@ -17,9 +17,12 @@ public:
     bool isValidForAlphabet(const string & alphabet) const;
 
     const container & mapping() const { return _mapping; }
+    std::size_t mappingCount() const;
 
     void addMapping(value_type v1, value_type v2);
     void removeMapping(value_type v);
+
+    // TODO: create a setMapping function
 
 public:
     value_type map(value_type v) const;

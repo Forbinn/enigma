@@ -37,6 +37,8 @@ public:
     std::size_t intermediateAlphabetCount() const;
     std::vector<string> intermediateAlphabets() const;
 
+    // TODO: create a setupAllAlphabets like function that sets input, intermediate and output alphabets at once
+
 public:
     void setRotorsOffset(const std::vector<std::size_t> & offsets);
     void setRotorOffset(std::size_t offset, std::size_t index);
