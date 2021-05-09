@@ -21,8 +21,12 @@ class EnigmaConan(ConanFile):
         "fPIC": True
     }
 
+    build_requires = [
+        "cppunit/1.15.1"
+    ]
+
     generators      = "cmake_find_package"
-    exports_sources = "src/*", "CMakeLists.txt"
+    exports_sources = "src/*", "unit_tests/*", "CMakeLists.txt"
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -32,6 +36,7 @@ class EnigmaConan(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+        cmake.test(args=["--", "ARGS=--progress"], output_on_failure=True)
 
     def package(self):
         self.copy("*.hpp",    dst=f"include/{self.name}", src="src")
