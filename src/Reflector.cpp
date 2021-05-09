@@ -18,7 +18,7 @@ void Enigma::Reflector::setAlphabet(const Enigma::string & alphabet)
 Enigma::value_type Enigma::Reflector::convert(Enigma::value_type c) const
 {
     if (!isValid())
-        return c;
+        return {};
 
     // Search the character in the alphabet and get its index
     // If we find it, then return the value at its opposing index
