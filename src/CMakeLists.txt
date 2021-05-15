@@ -11,8 +11,8 @@ add_library(enigma SHARED
   Reflector.hpp
   Rotors.cpp
   Rotors.hpp
-  Machine.cpp
-  Machine.hpp
+  #Machine.cpp
+  #Machine.hpp
 )
 
 target_compile_definitions(enigma PRIVATE ENIGMA_LIBRARY)

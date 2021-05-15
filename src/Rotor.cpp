@@ -2,129 +2,162 @@
 
 #include "Rotor.hpp"
 
-Enigma::Rotor::Rotor(const string & input, const string & output)
-    : _inputAlphabet  { input }
-    , _outputAlphabet { output }
+Enigma::Rotor::Rotor(const string & alphabet)
 {
-    _refreshIsValid();
+    setAlphabet(alphabet);
 }
 
-void Enigma::Rotor::setInputAlphabet(const string & input)
+void Enigma::Rotor::setAlphabet(const string & alphabet)
 {
-    _inputAlphabet = input;
-    _refreshIsValid();
-    reset();
+    clear();
+
+    string sortedAlphabet(alphabet);
+    std::sort(sortedAlphabet.begin(), sortedAlphabet.end());
+
+    _wires.resize(alphabet.size());
+
+    for (std::size_t i = 0; i < alphabet.size(); ++i)
+    {
+        const auto & c  = alphabet.at(i);
+        const auto idx  = sortedAlphabet.find(c);
+        _wires[i].first = static_cast<int>(idx) - static_cast<int>(i);
+    }
+
+    for (std::size_t i = 0; i < sortedAlphabet.size(); ++i)
+    {
+        const auto & c  = sortedAlphabet.at(i);
+        const auto idx  = alphabet.find(c);
+        _wires[i].second = static_cast<int>(idx) - static_cast<int>(i);
+    }
 }
 
-void Enigma::Rotor::setOutputAlphabet(const string & output)
+void Enigma::Rotor::setNotches(const std::vector<std::size_t> & notches)
 {
-    _outputAlphabet = output;
-    _refreshIsValid();
-    reset();
+    _notches.clear();
+    _notches.reserve(notches.size());
+    for (const auto & notch : notches)
+        addNotch(notch);
 }
 
-void Enigma::Rotor::setOffset(std::size_t offset)
+void Enigma::Rotor::addNotch(std::size_t idx)
+{
+    if (idx >= _wires.size())
+        return ;
+
+    const auto itr = std::find(_notches.begin(), _notches.end(), idx);
+    if (itr == _notches.end())
+        _notches.emplace_back(idx);
+}
+
+void Enigma::Rotor::removeNotch(std::size_t idx)
+{
+    const auto itr = std::find(_notches.begin(), _notches.end(), idx);
+    if (itr != _notches.end())
+        _notches.erase(itr);
+}
+
+void Enigma::Rotor::setRotation(std::size_t rotation)
 {
     if (!isValid())
         return ;
 
-    _offset = offset % _inputAlphabet.size();
+    const auto oldRotation = _rotation;
+    _rotation = rotation % _wires.size();
+    _rotateWires(static_cast<int>(_rotation) - static_cast<int>(oldRotation));
 }
 
-int Enigma::Rotor::rotate(int step)
+bool Enigma::Rotor::rotate(bool forward)
 {
     if (!isValid())
-        return 0;
+        return false;
 
-    auto pStep = static_cast<std::size_t>(std::abs(step));
-
-    if (step < 0)
+    _rotateWires(forward ? 1 : -1);
+    if (forward)
     {
-        const auto revolutionCount = static_cast<int>(pStep / _inputAlphabet.size());
-        pStep %= _inputAlphabet.size();
-
-        if (pStep > _offset)
-        { // Here we cannot subtract step from offset otherwise offset will underflow
-            _offset += _inputAlphabet.size() - pStep;
-            return -(revolutionCount + 1);
-        }
+        ++_rotation;
+        if (_rotation >= _wires.size())
+            _rotation -= _wires.size();
+    }
+    else
+    {
+        if (_rotation == 0)
+            _rotation = _wires.size() - 1;
         else
-        {
-            _offset -= pStep;
-            return -revolutionCount;
-        }
+            --_rotation;
     }
 
-    _offset += pStep;
-    const auto revolutionCount = static_cast<int>(_offset / _inputAlphabet.size());
-    _offset %= _inputAlphabet.size();
-
-    return revolutionCount;
+    return _hasCrossedANotch(forward);
 }
 
-Enigma::value_type Enigma::Rotor::convertFromInput(value_type c) const
+std::size_t Enigma::Rotor::convertTo(std::size_t idx) const
 {
-    if (!isValid())
-        return {};
+    if (!isValid() || idx >= _wires.size())
+        return string::npos;
 
-    auto idx = _inputAlphabet.find(c);
-    if (idx == string::npos)
-        return c;
+    const auto wire   = _wires.at(idx).first;
+    const auto result = wire + static_cast<int>(idx);
 
-    idx += _offset;
-    if (idx >= _outputAlphabet.size())
-        idx -= _outputAlphabet.size();
-
-    return _outputAlphabet.at(idx);
-}
-
-Enigma::value_type Enigma::Rotor::convertToInput(value_type c) const
-{
-    if (!isValid())
-        return {};
-
-    auto idx = _outputAlphabet.find(c);
-    if (idx == string::npos)
-        return c;
-
-    if (_offset > idx)
-        idx = idx + _inputAlphabet.size() - _offset;
+    if (result < 0)
+        return static_cast<std::size_t>(static_cast<int>(_wires.size()) + result);
+    else if (static_cast<std::size_t>(result) >= _wires.size())
+        return static_cast<std::size_t>(result) - _wires.size();
     else
-        idx -= _offset;
+        return static_cast<std::size_t>(result);
+}
 
-    return _inputAlphabet.at(idx);
+std::size_t Enigma::Rotor::convertFrom(std::size_t idx) const
+{
+    if (!isValid())
+        return string::npos;
+
+    const auto wire   = _wires.at(idx).second;
+    const auto result = wire + static_cast<int>(idx);
+
+    if (result < 0)
+        return static_cast<std::size_t>(static_cast<int>(_wires.size()) + result);
+    else if (static_cast<std::size_t>(result) >= _wires.size())
+        return static_cast<std::size_t>(result) - _wires.size();
+    else
+        return static_cast<std::size_t>(result);
 }
 
 void Enigma::Rotor::clear()
 {
-    _inputAlphabet.clear();
-    _outputAlphabet.clear();
-    _offset = 0;
-    _isValid = false;
+    _wires.clear();
+    _notches.clear();
+    _rotation = 0;
 }
 
 void Enigma::Rotor::reset()
 {
-    _offset = 0;
+    if (!isValid())
+        return ;
+
+    _rotateWires(-static_cast<int>(_rotation));
+    _rotation = 0;
 }
 
-void Enigma::Rotor::_refreshIsValid()
+void Enigma::Rotor::_rotateWires(int count)
 {
-    _isValid = [this]
+    if (count == 0)
+        return ;
+    else if (count < 0)
+        count = static_cast<int>(_wires.size()) - (-count) % static_cast<int>(_wires.size());
+    else
+        count %= _wires.size();
+
+    std::rotate(_wires.begin(), std::next(_wires.begin(), count), _wires.end());
+}
+
+bool Enigma::Rotor::_hasCrossedANotch(bool forward) const
+{
+    for (const auto & notch : _notches)
     {
-        if (_inputAlphabet.empty() || _inputAlphabet.size() != _outputAlphabet.size())
-            return false;
+        if (forward && _rotation == notch + 1)
+            return true;
+        else if (!forward && _rotation == notch)
+            return true;
+    }
 
-        auto inputCopy(_inputAlphabet);
-        std::sort(inputCopy.begin(), inputCopy.end());
-        if (std::adjacent_find(inputCopy.begin(), inputCopy.end()) != inputCopy.end())
-            return false;
-
-        auto outputCopy(_outputAlphabet);
-        std::sort(outputCopy.begin(), outputCopy.end());
-        if (std::adjacent_find(outputCopy.begin(), outputCopy.end()) != outputCopy.end())
-            return false;
-
-        return true;
-    }();
+    return false;
 }

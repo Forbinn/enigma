@@ -2,150 +2,223 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestRotor);
 
+// "abcdefghijklmnopqrstuvwxyz"
+// "ekmflgdqvzntowyhxuspaibrcj"
+//  01234567890123456789012345
+
+// "bcdefghijklmnopqrstuvwxyza"
+// "kmflgdqvzntowyhxuspaibrcje"
+//  01234567890123456789012345
+
+// "cdefghijklmnopqrstuvwxyzab"
+// "mflgdqvzntowyhxuspaibrcjek"
+//  01234567890123456789012345
+
+// "defghijklmnopqrstuvwxyzabc"
+// "flgdqvzntowyhxuspaibrcjekm"
+//  01234567890123456789012345
+
+/*
+ * Convert To algorithm
+ *  take char at index idx in unsorted alphabet
+ *  return index of char in sorted alphabet
+ *
+ * Convert From algorithm
+ *  take char at index in sorted alphabet
+ *  return index of char in unsorted alphabet
+ */
+
 void TestRotor::setUp()
 {
-    // The _invalidRotor is invalid because its input and output does not have the same length
-    _invalidRotor.setInputAlphabet("abc");
-    _invalidRotor.setOutputAlphabet("de");
-
-    _r1.setInputAlphabet ("abcdefghijklmnopqrstuvwxyz");
-    _r1.setOutputAlphabet("xwgolqytzderjpumbcsvkianfh");
-    _r2.setInputAlphabet (_r1.outputAlphabet());
-    _r2.setOutputAlphabet("njzeihmbyfwxovprdsqtuackgl");
+    _r.setAlphabet("ekmflgdqvzntowyhxuspaibrcj");
+    _r.setNotches({16});
 }
 
 void TestRotor::testIsValid()
 {
     CPPUNIT_ASSERT(!_defaultRotor.isValid());
     CPPUNIT_ASSERT(!_invalidRotor.isValid());
-    CPPUNIT_ASSERT(_r1.isValid());
-    CPPUNIT_ASSERT(_r2.isValid());
+    CPPUNIT_ASSERT(_r.isValid());
 
-    _defaultRotor.setInputAlphabet("abc");
-    _defaultRotor.setOutputAlphabet("def");
+    _defaultRotor.setAlphabet("ekmflgdqvzntowyhxuspaibrcj");
     CPPUNIT_ASSERT(_defaultRotor.isValid());
     _defaultRotor.clear();
     CPPUNIT_ASSERT(!_defaultRotor.isValid());
-    CPPUNIT_ASSERT(_defaultRotor.inputAlphabet().empty());
-    CPPUNIT_ASSERT(_defaultRotor.outputAlphabet().empty());
 }
 
 void TestRotor::testConvertFrom()
 {
-    _r1.reset();
-    _r2.reset();
+    _r.reset();
 
-    CPPUNIT_ASSERT_EQUAL('x', _r1.convertFromInput('a'));
-    CPPUNIT_ASSERT_EQUAL('w', _r1.convertFromInput('b'));
-    CPPUNIT_ASSERT_EQUAL('y', _r1.convertFromInput('g'));
-    CPPUNIT_ASSERT_EQUAL('k', _r1.convertFromInput('u'));
-    CPPUNIT_ASSERT_EQUAL('m', _r1.convertFromInput('p'));
-
-    CPPUNIT_ASSERT_EQUAL('c', _r2.convertFromInput('a'));
-    CPPUNIT_ASSERT_EQUAL('z', _r2.convertFromInput('g'));
-    CPPUNIT_ASSERT_EQUAL('b', _r2.convertFromInput('t'));
-    CPPUNIT_ASSERT_EQUAL('k', _r2.convertFromInput('n'));
-    CPPUNIT_ASSERT_EQUAL('p', _r2.convertFromInput('u'));
+    CPPUNIT_ASSERT_EQUAL(20ul, _r.convertFrom(0));
+    CPPUNIT_ASSERT_EQUAL(22ul, _r.convertFrom(1));
+    CPPUNIT_ASSERT_EQUAL(24ul, _r.convertFrom(2));
+    CPPUNIT_ASSERT_EQUAL(6ul,  _r.convertFrom(3));
+    CPPUNIT_ASSERT_EQUAL(0ul,  _r.convertFrom(4));
+    CPPUNIT_ASSERT_EQUAL(3ul,  _r.convertFrom(5));
+    CPPUNIT_ASSERT_EQUAL(5ul,  _r.convertFrom(6));
+    CPPUNIT_ASSERT_EQUAL(15ul, _r.convertFrom(7));
+    CPPUNIT_ASSERT_EQUAL(21ul, _r.convertFrom(8));
+    CPPUNIT_ASSERT_EQUAL(25ul, _r.convertFrom(9));
+    CPPUNIT_ASSERT_EQUAL(1ul,  _r.convertFrom(10));
+    CPPUNIT_ASSERT_EQUAL(4ul,  _r.convertFrom(11));
+    CPPUNIT_ASSERT_EQUAL(2ul,  _r.convertFrom(12));
+    CPPUNIT_ASSERT_EQUAL(10ul, _r.convertFrom(13));
+    CPPUNIT_ASSERT_EQUAL(12ul, _r.convertFrom(14));
+    CPPUNIT_ASSERT_EQUAL(19ul, _r.convertFrom(15));
+    CPPUNIT_ASSERT_EQUAL(7ul,  _r.convertFrom(16));
+    CPPUNIT_ASSERT_EQUAL(23ul, _r.convertFrom(17));
+    CPPUNIT_ASSERT_EQUAL(18ul, _r.convertFrom(18));
+    CPPUNIT_ASSERT_EQUAL(11ul, _r.convertFrom(19));
+    CPPUNIT_ASSERT_EQUAL(17ul, _r.convertFrom(20));
+    CPPUNIT_ASSERT_EQUAL(8ul,  _r.convertFrom(21));
+    CPPUNIT_ASSERT_EQUAL(13ul, _r.convertFrom(22));
+    CPPUNIT_ASSERT_EQUAL(16ul, _r.convertFrom(23));
+    CPPUNIT_ASSERT_EQUAL(14ul, _r.convertFrom(24));
+    CPPUNIT_ASSERT_EQUAL(9ul,  _r.convertFrom(25));
 }
 
 void TestRotor::testConvertTo()
 {
-    _r1.reset();
-    _r2.reset();
+    _r.reset();
 
-    CPPUNIT_ASSERT_EQUAL('a', _r1.convertToInput('x'));
-    CPPUNIT_ASSERT_EQUAL('b', _r1.convertToInput('w'));
-    CPPUNIT_ASSERT_EQUAL('g', _r1.convertToInput('y'));
-    CPPUNIT_ASSERT_EQUAL('u', _r1.convertToInput('k'));
-    CPPUNIT_ASSERT_EQUAL('p', _r1.convertToInput('m'));
-
-    CPPUNIT_ASSERT_EQUAL('a', _r2.convertToInput('c'));
-    CPPUNIT_ASSERT_EQUAL('g', _r2.convertToInput('z'));
-    CPPUNIT_ASSERT_EQUAL('t', _r2.convertToInput('b'));
-    CPPUNIT_ASSERT_EQUAL('n', _r2.convertToInput('k'));
-    CPPUNIT_ASSERT_EQUAL('u', _r2.convertToInput('p'));
+    CPPUNIT_ASSERT_EQUAL(4ul,  _r.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(10ul, _r.convertTo(1));
+    CPPUNIT_ASSERT_EQUAL(12ul, _r.convertTo(2));
+    CPPUNIT_ASSERT_EQUAL(5ul,  _r.convertTo(3));
+    CPPUNIT_ASSERT_EQUAL(11ul, _r.convertTo(4));
+    CPPUNIT_ASSERT_EQUAL(6ul,  _r.convertTo(5));
+    CPPUNIT_ASSERT_EQUAL(3ul,  _r.convertTo(6));
+    CPPUNIT_ASSERT_EQUAL(16ul, _r.convertTo(7));
+    CPPUNIT_ASSERT_EQUAL(21ul, _r.convertTo(8));
+    CPPUNIT_ASSERT_EQUAL(25ul, _r.convertTo(9));
+    CPPUNIT_ASSERT_EQUAL(13ul, _r.convertTo(10));
+    CPPUNIT_ASSERT_EQUAL(19ul, _r.convertTo(11));
+    CPPUNIT_ASSERT_EQUAL(14ul, _r.convertTo(12));
+    CPPUNIT_ASSERT_EQUAL(22ul, _r.convertTo(13));
+    CPPUNIT_ASSERT_EQUAL(24ul, _r.convertTo(14));
+    CPPUNIT_ASSERT_EQUAL(7ul,  _r.convertTo(15));
+    CPPUNIT_ASSERT_EQUAL(23ul, _r.convertTo(16));
+    CPPUNIT_ASSERT_EQUAL(20ul, _r.convertTo(17));
+    CPPUNIT_ASSERT_EQUAL(18ul, _r.convertTo(18));
+    CPPUNIT_ASSERT_EQUAL(15ul, _r.convertTo(19));
+    CPPUNIT_ASSERT_EQUAL(0ul,  _r.convertTo(20));
+    CPPUNIT_ASSERT_EQUAL(8ul,  _r.convertTo(21));
+    CPPUNIT_ASSERT_EQUAL(1ul,  _r.convertTo(22));
+    CPPUNIT_ASSERT_EQUAL(17ul, _r.convertTo(23));
+    CPPUNIT_ASSERT_EQUAL(2ul,  _r.convertTo(24));
+    CPPUNIT_ASSERT_EQUAL(9ul,  _r.convertTo(25));
 }
 
 void TestRotor::testConvertInvalid()
 {
-    CPPUNIT_ASSERT_EQUAL('\0', _invalidRotor.convertToInput('a'));
-    CPPUNIT_ASSERT_EQUAL('\0', _invalidRotor.convertToInput('z'));
-    CPPUNIT_ASSERT_EQUAL('\0', _invalidRotor.convertFromInput('a'));
-    CPPUNIT_ASSERT_EQUAL('\0', _invalidRotor.convertFromInput('z'));
+    CPPUNIT_ASSERT_EQUAL(Enigma::string::npos, _invalidRotor.convertTo(57));
+    CPPUNIT_ASSERT_EQUAL(Enigma::string::npos, _invalidRotor.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(Enigma::string::npos, _invalidRotor.convertFrom(1));
+    CPPUNIT_ASSERT_EQUAL(Enigma::string::npos, _invalidRotor.convertFrom(5));
 }
 
 void TestRotor::testReset()
 {
-    _r1.setOffset(0);
-    CPPUNIT_ASSERT_EQUAL(0ul, _r1.offset());
-    _r1.setOffset(15);
-    CPPUNIT_ASSERT_EQUAL(15ul, _r1.offset());
-    _r1.reset();
-    CPPUNIT_ASSERT_EQUAL(0ul, _r1.offset());
-    _r1.setOffset(27);
-    CPPUNIT_ASSERT_EQUAL(1ul, _r1.offset());
+    _r.setRotation(0);
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
+    _r.setRotation(15);
+    CPPUNIT_ASSERT_EQUAL(15ul, _r.rotation());
+    _r.reset();
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
+    _r.setRotation(27);
+    CPPUNIT_ASSERT_EQUAL(1ul, _r.rotation());
+
+    _r.reset();
+    const auto enc = _r.convertTo(0);
+    _r.rotate();
+    _r.reset();
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.convertFrom(enc));
 }
 
 void TestRotor::testRotate()
 {
-    _r1.reset();
-    _r2.reset();
+    _r.reset();
 
-    CPPUNIT_ASSERT_EQUAL(0, _r1.rotate());
-    CPPUNIT_ASSERT_EQUAL(0, _r1.rotate(24));
-    CPPUNIT_ASSERT_EQUAL(1, _r1.rotate());
-    CPPUNIT_ASSERT_EQUAL(-1, _r1.rotate(-1));
-    CPPUNIT_ASSERT_EQUAL(0, _r1.rotate(-1));
+    CPPUNIT_ASSERT(!_r.rotate());
+    CPPUNIT_ASSERT_EQUAL(1ul, _r.rotation());
+    CPPUNIT_ASSERT(!_r.rotate());
+    CPPUNIT_ASSERT_EQUAL(2ul, _r.rotation());
+    CPPUNIT_ASSERT(!_r.rotate(false));
+    CPPUNIT_ASSERT_EQUAL(1ul, _r.rotation());
 
-    _r1.reset();
-    CPPUNIT_ASSERT_EQUAL(-2, _r1.rotate(-27));
-    _r1.reset();
-    CPPUNIT_ASSERT_EQUAL(1, _r1.rotate(51));
-    _r1.reset();
-    CPPUNIT_ASSERT_EQUAL(2, _r1.rotate(52));
+    _r.reset();
+    _r.setRotation(16);
+
+    CPPUNIT_ASSERT(_r.rotate());
+    CPPUNIT_ASSERT_EQUAL(17ul, _r.rotation());
+    CPPUNIT_ASSERT(_r.rotate(false));
+    CPPUNIT_ASSERT_EQUAL(16ul, _r.rotation());
 }
 
 void TestRotor::testRotateInvalid()
 {
-    CPPUNIT_ASSERT_EQUAL(0, _invalidRotor.rotate());
-    CPPUNIT_ASSERT_EQUAL(0, _invalidRotor.rotate(25));
-    CPPUNIT_ASSERT_EQUAL(0, _invalidRotor.rotate(60));
-    CPPUNIT_ASSERT_EQUAL(0, _invalidRotor.rotate(-1));
-    CPPUNIT_ASSERT_EQUAL(0, _invalidRotor.rotate(-27));
+    _invalidRotor.reset();
+
+    CPPUNIT_ASSERT_EQUAL(0ul, _invalidRotor.rotation());
+    _invalidRotor.rotate();
+    CPPUNIT_ASSERT_EQUAL(0ul, _invalidRotor.rotation());
+    _invalidRotor.rotate(-1);
+    CPPUNIT_ASSERT_EQUAL(0ul, _invalidRotor.rotation());
 }
 
 void TestRotor::testRotateAndConvertFrom()
 {
-    _r1.reset();
-    _r2.reset();
+    _r.reset();
+    _r.rotate();
 
-    CPPUNIT_ASSERT_EQUAL('x', _r1.convertFromInput('a'));
-    _r1.rotate();
-    CPPUNIT_ASSERT_EQUAL('w', _r1.convertFromInput('a'));
-    _r1.rotate();
-    CPPUNIT_ASSERT_EQUAL('g', _r1.convertFromInput('a'));
+    CPPUNIT_ASSERT_EQUAL(21ul, _r.convertFrom(0));
+    CPPUNIT_ASSERT_EQUAL(1ul,  _r.convertFrom(11));
+    CPPUNIT_ASSERT_EQUAL(7ul,  _r.convertFrom(20));
+    CPPUNIT_ASSERT_EQUAL(5ul,  _r.convertFrom(2));
+    CPPUNIT_ASSERT_EQUAL(17ul, _r.convertFrom(17));
 
-    CPPUNIT_ASSERT_EQUAL('c', _r2.convertFromInput('a'));
-    _r2.rotate(-1);
-    CPPUNIT_ASSERT_EQUAL('a', _r2.convertFromInput('a'));
-    _r2.rotate(-1);
-    CPPUNIT_ASSERT_EQUAL('u', _r2.convertFromInput('a'));
+    _r.rotate();
+
+    CPPUNIT_ASSERT_EQUAL(22ul, _r.convertFrom(0));
+    CPPUNIT_ASSERT_EQUAL(8ul,  _r.convertFrom(11));
+    CPPUNIT_ASSERT_EQUAL(11ul, _r.convertFrom(20));
+    CPPUNIT_ASSERT_EQUAL(24ul, _r.convertFrom(2));
+    CPPUNIT_ASSERT_EQUAL(9ul,  _r.convertFrom(17));
+
+    _r.rotate();
+
+    CPPUNIT_ASSERT_EQUAL(3ul,  _r.convertFrom(0));
+    CPPUNIT_ASSERT_EQUAL(9ul,  _r.convertFrom(11));
+    CPPUNIT_ASSERT_EQUAL(13ul, _r.convertFrom(20));
+    CPPUNIT_ASSERT_EQUAL(0ul,  _r.convertFrom(2));
+    CPPUNIT_ASSERT_EQUAL(14ul, _r.convertFrom(17));
 }
 
 void TestRotor::testRotateAndConvertTo()
 {
-    _r1.reset();
-    _r2.reset();
+    _r.reset();
+    _r.rotate();
 
-    CPPUNIT_ASSERT_EQUAL('a', _r1.convertToInput('x'));
-    _r1.rotate();
-    CPPUNIT_ASSERT_EQUAL('a', _r1.convertToInput('w'));
-    _r1.rotate();
-    CPPUNIT_ASSERT_EQUAL('a', _r1.convertToInput('g'));
+    CPPUNIT_ASSERT_EQUAL(9ul,  _r.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(13ul, _r.convertTo(11));
+    CPPUNIT_ASSERT_EQUAL(7ul,  _r.convertTo(20));
+    CPPUNIT_ASSERT_EQUAL(4ul,  _r.convertTo(2));
+    CPPUNIT_ASSERT_EQUAL(17ul, _r.convertTo(17));
 
-    CPPUNIT_ASSERT_EQUAL('a', _r2.convertToInput('c'));
-    _r2.rotate(-1);
-    CPPUNIT_ASSERT_EQUAL('a', _r2.convertToInput('a'));
-    _r2.rotate(-1);
-    CPPUNIT_ASSERT_EQUAL('a', _r2.convertToInput('u'));
+    _r.rotate();
+
+    CPPUNIT_ASSERT_EQUAL(10ul, _r.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(20ul, _r.convertTo(11));
+    CPPUNIT_ASSERT_EQUAL(25ul, _r.convertTo(20));
+    CPPUNIT_ASSERT_EQUAL(9ul,  _r.convertTo(2));
+    CPPUNIT_ASSERT_EQUAL(13ul, _r.convertTo(17));
+
+    _r.rotate();
+
+    CPPUNIT_ASSERT_EQUAL(2ul,  _r.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(21ul, _r.convertTo(11));
+    CPPUNIT_ASSERT_EQUAL(14ul, _r.convertTo(20));
+    CPPUNIT_ASSERT_EQUAL(3ul,  _r.convertTo(2));
+    CPPUNIT_ASSERT_EQUAL(23ul, _r.convertTo(17));
 }

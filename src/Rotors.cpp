@@ -2,169 +2,41 @@
 
 #include "Rotors.hpp"
 
-namespace
+bool Enigma::Rotors::isValid() const
 {
-using difference_type = typename Enigma::Rotors::container::iterator::difference_type;
-} // !namespace
+    if (_rotors.empty() || !_reflector.isValid())
+        return false;
 
-Enigma::Rotors::Rotors(const string & inputAlphabet,
-                       const string & outputAlphabet)
-    : _inputAlphabet  { inputAlphabet }
-    , _outputAlphabet { outputAlphabet }
-    , _rotors         { { inputAlphabet, outputAlphabet } }
-    , _reflector      { outputAlphabet }
-{
-    _refreshIsValid();
+    return std::all_of(_rotors.begin(), _rotors.end(),
+                       [](const auto & rotor){ return rotor.isValid(); });
 }
 
-void Enigma::Rotors::setInputAlphabet(const string & inputAlphabet)
+Enigma::Rotor & Enigma::Rotors::appendRotor(const string & alphabet)
 {
-    _inputAlphabet = inputAlphabet;
-
-    if (!_rotors.empty())
-        _rotors.front().setInputAlphabet(_inputAlphabet);
-    else if (!_outputAlphabet.empty())
-        _rotors.emplace_back(_inputAlphabet, _outputAlphabet);
-
-    reset();
-    _refreshIsValid();
+    return insertRotor(_rotors.size(), alphabet);
 }
 
-void Enigma::Rotors::setOutputAlphabet(const string & outputAlphabet)
+Enigma::Rotor & Enigma::Rotors::prependRotor(const string & alphabet)
 {
-    _outputAlphabet = outputAlphabet;
-
-    if (!_rotors.empty())
-        _rotors.back().setOutputAlphabet(_outputAlphabet);
-    else if (!_inputAlphabet.empty())
-        _rotors.emplace_back(_inputAlphabet, _outputAlphabet);
-
-    _reflector.setAlphabet(_outputAlphabet);
-    reset();
-    _refreshIsValid();
+    return insertRotor(0, alphabet);
 }
 
-void Enigma::Rotors::setIntermediateAlphabets(const std::vector<Enigma::string> & alphabets)
+Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, const string & alphabet)
 {
-    if (_rotors.empty())
+    idx = std::clamp(0ul, idx, _rotors.size());
+    if (idx == 0)
+        _setNewInputAlphabet(alphabet);
+
+    const auto itr = std::next(_rotors.begin(), static_cast<container::iterator::difference_type>(idx));
+    return *_rotors.emplace(itr, alphabet);
+}
+
+void Enigma::Rotors::removeRotor(std::size_t idx)
+{
+    if (idx >= _rotors.size())
         return ;
 
-    clearIntermediateAlphabet();
-
-    auto itr = _rotors.begin();
-    for (const auto & alphabet : alphabets)
-    {
-        _rotors.emplace_back(alphabet, _outputAlphabet);
-        itr->setOutputAlphabet(alphabet);
-        ++itr;
-    }
-
-    _refreshIsValid();
-}
-
-void Enigma::Rotors::appendIntermediateAlphabet(const string & alphabet)
-{
-    insertIntermediateAlphabet(alphabet, intermediateAlphabetCount());
-}
-
-void Enigma::Rotors::prependIntermediateAlphabet(const string & alphabet)
-{
-    insertIntermediateAlphabet(alphabet, 0);
-}
-
-void Enigma::Rotors::insertIntermediateAlphabet(const string & alphabet, std::size_t index)
-{
-    if (_rotors.empty())
-        return ;
-
-    index = std::clamp(index, {}, intermediateAlphabetCount());
-
-    // The parameter alphabet is used as the input of the new rotor
-    // The output of the previous rotor become the input of the new one
-    // The output of the new rotor become the input of the next rotor
-    // or the global output if it is inserted at the end
-
-    const auto previousRotorItr       = std::next(_rotors.begin(), static_cast<difference_type>(index));
-    const auto nextRotorItr           = std::next(previousRotorItr);
-    const auto newRotorOutputAlphabet = nextRotorItr == _rotors.end() ? _outputAlphabet
-                                                                      : nextRotorItr->inputAlphabet();
-
-    previousRotorItr->setOutputAlphabet(alphabet);
-    _rotors.emplace(nextRotorItr, alphabet, newRotorOutputAlphabet);
-    _refreshIsValid();
-}
-
-void Enigma::Rotors::removeIntermediateAlphabet(std::size_t index)
-{
-    if (index >= intermediateAlphabetCount())
-        return ;
-
-    const auto currentRotorItr = std::next(_rotors.begin(), static_cast<difference_type>(index));
-    const auto nextRotorItr    = std::next(currentRotorItr);
-
-    currentRotorItr->setOutputAlphabet(nextRotorItr->outputAlphabet());
-    _rotors.erase(nextRotorItr);
-    _refreshIsValid();
-}
-
-Enigma::string Enigma::Rotors::intermediateAlphabet(std::size_t index) const
-{
-    if (index >= intermediateAlphabetCount())
-        return {};
-
-    return std::next(_rotors.begin(), static_cast<difference_type>(index))->outputAlphabet();
-}
-
-std::size_t Enigma::Rotors::intermediateAlphabetCount() const
-{
-    if (_rotors.empty())
-        return 0;
-    return _rotors.size() - 1;
-}
-
-std::vector<Enigma::string> Enigma::Rotors::intermediateAlphabets() const
-{
-    if (intermediateAlphabetCount() == 0)
-        return {};
-
-    std::vector<string> alphabets;
-    for (auto itr = std::next(_rotors.begin()); itr != _rotors.end(); ++itr)
-        alphabets.emplace_back(itr->inputAlphabet());
-    return alphabets;
-}
-
-void Enigma::Rotors::setRotorsOffset(const std::vector<std::size_t> & offsets)
-{
-    if (offsets.size() < _rotors.size())
-        return ;
-
-    std::size_t i = 0;
-    for (auto & rotor : _rotors)
-        rotor.setOffset(offsets.at(i++));
-}
-
-void Enigma::Rotors::setRotorOffset(std::size_t offset, std::size_t index)
-{
-    if (index >= _rotors.size())
-        return ;
-    std::next(_rotors.begin(), static_cast<difference_type>(index))->setOffset(offset);
-}
-
-std::size_t Enigma::Rotors::rotorOffset(std::size_t index) const
-{
-    if (index >= _rotors.size())
-        return 0;
-    return std::next(_rotors.begin(), static_cast<difference_type>(index))->offset();
-}
-
-std::vector<std::size_t> Enigma::Rotors::rotorsOffset() const
-{
-    std::vector<std::size_t> offsets;
-    offsets.reserve(_rotors.size());
-
-    for (const auto & rotor : _rotors)
-        offsets.emplace_back(rotor.offset());
-    return offsets;
+    _rotors.erase(std::next(_rotors.begin(), static_cast<container::iterator::difference_type>(idx)));
 }
 
 Enigma::value_type Enigma::Rotors::convert(value_type c)
@@ -172,37 +44,27 @@ Enigma::value_type Enigma::Rotors::convert(value_type c)
     if (!isValid())
         return {};
 
+    if (!_isValueInAlphabet(c))
+        return c;
+
     _rotateRotors();
 
+    auto idx = _getIdxOfValue(c);
     for (auto itr = _rotors.begin(); itr != _rotors.end(); ++itr)
-        c = itr->convertFromInput(c);
+        idx = itr->convertTo(idx);
 
-    c = _reflector.convert(c);
+    idx = _reflector.convert(idx);
 
     for (auto itr = _rotors.rbegin(); itr != _rotors.rend(); ++itr)
-        c = itr->convertToInput(c);
+        idx = itr->convertFrom(idx);
 
-    return c;
+    return _getValueOfIdx(idx);
 }
 
 void Enigma::Rotors::clear()
 {
-    _inputAlphabet.clear();
-    _outputAlphabet.clear();
     _rotors.clear();
     _reflector.clear();
-    _isValid = false;
-}
-
-void Enigma::Rotors::clearIntermediateAlphabet()
-{
-    if (intermediateAlphabetCount() == 0)
-        return ;
-
-    for (auto itr = std::next(_rotors.begin()); itr != _rotors.end();)
-        itr = _rotors.erase(itr);
-    _rotors.front().setOutputAlphabet(_outputAlphabet);
-    _refreshIsValid();
 }
 
 void Enigma::Rotors::reset()
@@ -214,18 +76,27 @@ void Enigma::Rotors::reset()
 void Enigma::Rotors::_rotateRotors()
 {
     for (auto & rotor : _rotors)
-        if (rotor.rotate() == 0)
+        if (!rotor.rotate())
             break;
 }
 
-void Enigma::Rotors::_refreshIsValid()
+void Enigma::Rotors::_setNewInputAlphabet(const Enigma::string & alphabet)
 {
-    _isValid = [this]
-    {
-        if (_rotors.empty() || !_reflector.isValid())
-            return false;
+    _inputAlphabet = alphabet;
+    std::sort(_inputAlphabet.begin(), _inputAlphabet.end());
+}
 
-        return std::all_of(_rotors.begin(), _rotors.end(),
-                           [](const auto & rotor){ return rotor.isValid(); });
-    }();
+bool Enigma::Rotors::_isValueInAlphabet(Enigma::value_type c) const
+{
+    return _inputAlphabet.find(c) != string::npos;
+}
+
+std::size_t Enigma::Rotors::_getIdxOfValue(value_type c) const
+{
+    return _inputAlphabet.find(c);
+}
+
+Enigma::value_type Enigma::Rotors::_getValueOfIdx(std::size_t idx) const
+{
+    return _inputAlphabet.at(idx);
 }

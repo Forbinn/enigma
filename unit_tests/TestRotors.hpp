@@ -8,7 +8,7 @@ class TestRotors : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(TestRotors);
     CPPUNIT_TEST(testIsValid);
-    CPPUNIT_TEST(testRotorCount);
+    CPPUNIT_TEST(testReset);
     CPPUNIT_TEST(testConvert);
     CPPUNIT_TEST(testConvertInvalid);
     CPPUNIT_TEST_SUITE_END();
@@ -18,7 +18,7 @@ public:
 
 public:
     void testIsValid();
-    void testRotorCount();
+    void testReset();
     void testConvert();
     void testConvertInvalid();
 

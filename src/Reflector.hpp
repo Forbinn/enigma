@@ -1,29 +1,19 @@
 #pragma once
 
-#include <unordered_map>
-
-#include "enigma_global.hpp"
+#include "Rotor.hpp"
 
 namespace Enigma
 {
-class ENIGMA_EXPORT Reflector
+class ENIGMA_EXPORT Reflector : public Rotor
 {
 public:
-    Reflector() = default;
-    Reflector(const string & alphabet);
-
-    bool isValid() const;
-
-    const string & alphabet() const { return _alphabet; }
-    void setAlphabet(const string & alphabet);
+    bool isValid() const override;
 
 public:
-    value_type convert(value_type c) const;
+    bool rotate(bool) override;
 
 public:
-    void clear();
-
-private:
-    string _alphabet;
+    std::size_t convertFrom(std::size_t idx) const override { return convertTo(idx); }
+    std::size_t convert(std::size_t idx) const              { return convertTo(idx); }
 };
 } // !namespace Enigma

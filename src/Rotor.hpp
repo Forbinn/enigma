@@ -2,41 +2,52 @@
 
 #include "enigma_global.hpp"
 
+#include <vector>
+
 namespace Enigma
 {
 class ENIGMA_EXPORT Rotor
 {
 public:
-    Rotor() = default;
-    Rotor(const string & input,
-          const string & output);
-
-    bool isValid() const { return _isValid; }
-
-    const string & inputAlphabet() const  { return _inputAlphabet; }
-    const string & outputAlphabet() const { return _outputAlphabet; }
-    void setInputAlphabet(const string & input);
-    void setOutputAlphabet(const string & output);
-
-    std::size_t offset() const { return _offset; }
-    void setOffset(std::size_t offset);
-    int rotate(int step = 1);
+    using Wires = std::vector<std::pair<int, int>>;
 
 public:
-    value_type convertFromInput(value_type c) const;
-    value_type convertToInput(value_type c) const;
+    Rotor() = default;
+    Rotor(const string & alphabet);
+    virtual ~Rotor() = default;
+
+    virtual bool isValid() const { return !_wires.empty(); }
+
+public:
+    void setAlphabet(const string & alphabet);
+
+    void setNotches(const std::vector<std::size_t> & notches);
+    void addNotch(std::size_t idx);
+    void removeNotch(std::size_t idx);
+    std::size_t notchCount() const { return _notches.size(); }
+    const std::vector<std::size_t> & notches() const { return _notches; }
+
+public:
+    void setRotation(std::size_t rotation);
+    std::size_t rotation() const { return _rotation; }
+    virtual bool rotate(bool forward = true);
+
+    virtual std::size_t convertTo(std::size_t idx) const;
+    virtual std::size_t convertFrom(std::size_t idx) const;
 
 public:
     void clear();
     void reset();
 
 private:
-    void _refreshIsValid();
+    void _rotateWires(int count);
+    bool _hasCrossedANotch(bool forward) const;
+
+protected:
+    Wires _wires;
 
 private:
-    string      _inputAlphabet;
-    string      _outputAlphabet;
-    std::size_t _offset = 0;
-    bool        _isValid = false;
+    std::vector<std::size_t> _notches;
+    std::size_t              _rotation = 0;
 };
 } // !namespace Enigma
