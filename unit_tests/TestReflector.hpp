@@ -10,6 +10,7 @@ class TestReflector : public CppUnit::TestFixture
     CPPUNIT_TEST(testIsValid);
     CPPUNIT_TEST(testConvert);
     CPPUNIT_TEST(testConvertInvalid);
+    CPPUNIT_TEST(testNoOpRotation);
     CPPUNIT_TEST_SUITE_END();
 
 public:
