@@ -10,8 +10,6 @@ class ENIGMA_EXPORT Machine
 {
 public:
     Machine() = default;
-    Machine(const string & inputAlphabet,
-            const string & outputAlphabet);
 
     bool isValid() const;
 

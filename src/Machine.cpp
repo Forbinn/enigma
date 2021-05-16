@@ -3,19 +3,12 @@
 #include <random>
 #include <functional>
 
-Enigma::Machine::Machine(const Enigma::string & inputAlphabet,
-                         const Enigma::string & outputAlphabet)
-    : _rotors { inputAlphabet, outputAlphabet }
-{
-}
-
 bool Enigma::Machine::isValid() const
 {
     if (!_rotors.isValid())
         return false;
 
-    return _plugboard.isValidForAlphabet(_rotors.inputAlphabet())
-            && _plugboard.isValidForAlphabet(_rotors.outputAlphabet());
+    return true;
 }
 
 Enigma::value_type Enigma::Machine::convert(Enigma::value_type v)
@@ -86,12 +79,11 @@ Enigma::Machine Enigma::Machine::buildRandomMachine(const string & alphabet,
         return outAlphabet;
     };
 
-    // The Machine ctor will create the first rotor
-    Machine machine(alphabet, generateRandomAlphabet());
+    Machine machine;
 
     // Then we just have to crete the other ones
-    for (std::size_t i = 1; i < rotorCount; ++i)
-        machine.rotors().appendIntermediateAlphabet(generateRandomAlphabet());
+    for (std::size_t i = 0; i < rotorCount; ++i)
+        machine.rotors().appendRotor(generateRandomAlphabet());
 
     if (plugboardSwap > 0)
     {

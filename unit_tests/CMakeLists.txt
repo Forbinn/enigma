@@ -12,6 +12,8 @@ add_executable(enigma_unit_test
   TestPlugBoard.hpp
   TestRotors.cpp
   TestRotors.hpp
+  TestMachine.cpp
+  TestMachine.hpp
 )
 
 target_link_libraries(enigma_unit_test enigma
