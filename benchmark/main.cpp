@@ -12,7 +12,7 @@ int main()
     r.setReflectorAlphabet("YRUHQSLDPXNGOKMIEBFZCWVJAT");
 
     for (int i = 0; i < 1'000'000; ++i)
-        r.convert('A');
+        benchmark::DoNotOptimize(r.convert('A'));
 }
 #else
 BENCHMARK_MAIN();
