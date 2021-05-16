@@ -19,7 +19,7 @@ public:
     virtual bool isValid() const { return !_wires.empty(); }
 
 public:
-    virtual void setAlphabet(const string & alphabet);
+    void setAlphabet(const string & alphabet);
 
     void setNotches(const std::vector<std::size_t> & notches);
     void addNotch(std::size_t idx);
