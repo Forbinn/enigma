@@ -24,7 +24,7 @@ class EnigmaConan(ConanFile):
         "fPIC": True,
 
         "with_test": True,
-        "with_benchmark": True
+        "with_benchmark": False
     }
 
     generators      = "cmake_find_package"
@@ -51,6 +51,8 @@ class EnigmaConan(ConanFile):
         cmake.build()
         if self.options.with_test:
             cmake.test(args=["--", "ARGS=--progress"], output_on_failure=True)
+        if self.options.with_benchmark:
+            self.run("./benchmark/enigma_benchmark", run_environment=True)
 
     def package(self):
         self.copy("*.hpp",    dst=f"include/{self.name}", src="src")
