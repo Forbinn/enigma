@@ -81,9 +81,13 @@ Enigma::Machine Enigma::Machine::buildRandomMachine(const string & alphabet,
 
     Machine machine;
 
-    // Then we just have to crete the other ones
+    // Create all rotors
     for (std::size_t i = 0; i < rotorCount; ++i)
         machine.rotors().appendRotor(generateRandomAlphabet());
+
+    // Setup a random reflector
+    while (!machine.rotors().reflector().isValid())
+        machine.rotors().setReflectorAlphabet(generateRandomAlphabet());
 
     if (plugboardSwap > 0)
     {
