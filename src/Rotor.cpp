@@ -77,9 +77,7 @@ void Enigma::Rotor::setRotation(std::size_t rotation)
     if (!isValid())
         return ;
 
-    const auto oldRotation = _rotation;
     _rotation = rotation % _wires.size();
-    _rotateWires(static_cast<int>(_rotation) - static_cast<int>(oldRotation));
 }
 
 bool Enigma::Rotor::rotate(bool forward)
@@ -87,7 +85,6 @@ bool Enigma::Rotor::rotate(bool forward)
     if (!isValid())
         return false;
 
-    _rotateWires(forward ? 1 : -1);
     if (forward)
     {
         ++_rotation;
@@ -110,7 +107,15 @@ std::size_t Enigma::Rotor::convertTo(std::size_t idx) const
     if (!isValid() || idx >= _wires.size())
         return string::npos;
 
-    const auto wire   = _wires.at(idx).first;
+    const auto wireIdx = [idx, this]
+    {
+        auto newIdx = idx + _rotation;
+        if (newIdx >= _wires.size())
+            newIdx -= _wires.size();
+        return newIdx;
+    }();
+
+    const auto wire   = _wires.at(wireIdx).first;
     const auto result = wire + static_cast<int>(idx);
 
     if (result < 0)
@@ -126,7 +131,15 @@ std::size_t Enigma::Rotor::convertFrom(std::size_t idx) const
     if (!isValid())
         return string::npos;
 
-    const auto wire   = _wires.at(idx).second;
+    const auto wireIdx = [idx, this]
+    {
+        auto newIdx = idx + _rotation;
+        if (newIdx >= _wires.size())
+            newIdx -= _wires.size();
+        return newIdx;
+    }();
+
+    const auto wire   = _wires.at(wireIdx).second;
     const auto result = wire + static_cast<int>(idx);
 
     if (result < 0)
@@ -149,20 +162,7 @@ void Enigma::Rotor::reset()
     if (!isValid())
         return ;
 
-    _rotateWires(-static_cast<int>(_rotation));
     _rotation = 0;
-}
-
-void Enigma::Rotor::_rotateWires(int count)
-{
-    if (count == 0)
-        return ;
-    else if (count < 0)
-        count = static_cast<int>(_wires.size()) - (-count) % static_cast<int>(_wires.size());
-    else
-        count %= _wires.size();
-
-    std::rotate(_wires.begin(), std::next(_wires.begin(), count), _wires.end());
 }
 
 bool Enigma::Rotor::_hasCrossedANotch(bool forward) const

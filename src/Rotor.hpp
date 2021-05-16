@@ -45,7 +45,6 @@ protected:
     Rotor(bool allowStraightWire);
 
 private:
-    void _rotateWires(int count);
     bool _hasCrossedANotch(bool forward) const;
 
 protected:
