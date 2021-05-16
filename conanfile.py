@@ -42,10 +42,8 @@ class EnigmaConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        if self.options.with_test:
-            cmake.definitions["ENIGMA_TESTS"] = "ON"
-        if self.options.with_benchmark:
-            cmake.definitions["ENIGMA_BENCHMARK"] = "ON"
+        cmake.definitions["ENIGMA_TESTS"] = "ON" if self.options.with_test else "OFF"
+        cmake.definitions["ENIGMA_BENCHMARK"] = "ON" if self.options.with_benchmark else "OFF"
 
         cmake.configure()
         cmake.build()
