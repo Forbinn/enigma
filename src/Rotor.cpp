@@ -56,6 +56,11 @@ void Enigma::Rotor::removeNotch(std::size_t idx)
         _notches.erase(itr);
 }
 
+bool Enigma::Rotor::isInNotchPosition() const
+{
+    return std::find(_notches.begin(), _notches.end(), _rotation) != _notches.end();
+}
+
 void Enigma::Rotor::setRotation(std::size_t rotation)
 {
     if (!isValid())

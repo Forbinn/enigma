@@ -75,9 +75,16 @@ void Enigma::Rotors::reset()
 
 void Enigma::Rotors::_rotateRotors()
 {
-    for (auto & rotor : _rotors)
-        if (!rotor.rotate())
-            break;
+    const auto firstRotorHasCrossedANotch = _rotors.at(0).rotate();
+    if (_rotors.size() == 1)
+        return ;
+
+    if (firstRotorHasCrossedANotch || _rotors.at(1).isInNotchPosition())
+    {
+        for (auto itr = std::next(_rotors.begin()); itr != _rotors.end(); ++itr)
+            if (!itr->rotate())
+                return ;
+    }
 }
 
 void Enigma::Rotors::_setNewInputAlphabet(const Enigma::string & alphabet)

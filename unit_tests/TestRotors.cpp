@@ -170,4 +170,25 @@ void TestRotors::testDoubleStepSequence()
     CPPUNIT_ASSERT_EQUAL(18ul, _r123.rotor(0).rotation());
     CPPUNIT_ASSERT_EQUAL(5ul,  _r123.rotor(1).rotation());
     CPPUNIT_ASSERT_EQUAL(1ul,  _r123.rotor(2).rotation());
+
+    _r654.reset();
+
+    _r654.rotor(0).setRotation(25);
+    _r654.rotor(1).setRotation(24);
+
+    CPPUNIT_ASSERT_EQUAL(25ul, _r654.rotor(0).rotation());
+    CPPUNIT_ASSERT_EQUAL(24ul, _r654.rotor(1).rotation());
+    CPPUNIT_ASSERT_EQUAL(0ul,  _r654.rotor(2).rotation());
+
+    _r654.convert('a');
+
+    CPPUNIT_ASSERT_EQUAL(0ul,  _r654.rotor(0).rotation());
+    CPPUNIT_ASSERT_EQUAL(25ul, _r654.rotor(1).rotation());
+    CPPUNIT_ASSERT_EQUAL(0ul,  _r654.rotor(2).rotation());
+
+    _r654.convert('a');
+
+    CPPUNIT_ASSERT_EQUAL(1ul, _r654.rotor(0).rotation());
+    CPPUNIT_ASSERT_EQUAL(0ul, _r654.rotor(1).rotation());
+    CPPUNIT_ASSERT_EQUAL(1ul, _r654.rotor(2).rotation());
 }

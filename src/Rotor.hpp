@@ -27,6 +27,8 @@ public:
     std::size_t notchCount() const { return _notches.size(); }
     const std::vector<std::size_t> & notches() const { return _notches; }
 
+    bool isInNotchPosition() const;
+
 public:
     void setRotation(std::size_t rotation);
     std::size_t rotation() const { return _rotation; }
