@@ -14,14 +14,12 @@ class EnigmaConan(ConanFile):
 
     options     = {
         "shared": [True, False],
-        "fPIC": [True, False],
 
         "with_test": [True, False],
         "with_benchmark": [True, False]
     }
     default_options = {
         "shared": False,
-        "fPIC": True,
 
         "with_test": True,
         "with_benchmark": False
@@ -29,10 +27,6 @@ class EnigmaConan(ConanFile):
 
     generators      = "cmake_find_package"
     exports_sources = "src/*", "unit_tests/*", "benchmark/*", "CMakeLists.txt"
-
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
 
     def build_requirements(self):
         if self.options.with_test:
