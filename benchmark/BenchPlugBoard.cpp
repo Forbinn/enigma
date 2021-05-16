@@ -14,20 +14,6 @@ void BenchPlugBoard::SetUp(const benchmark::State &)
     p.addMapping('A', 'F');
 }
 
-BENCHMARK_F(BenchPlugBoard, benchMap)(benchmark::State & st)
-{
-    for (auto _ : st)
-        benchmark::DoNotOptimize(p.map('A'));
-    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()));
-}
-
-BENCHMARK_F(BenchPlugBoard, benchNotMapped)(benchmark::State & st)
-{
-    for (auto _ : st)
-        benchmark::DoNotOptimize(p.map('B'));
-    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()));
-}
-
 BENCHMARK_F(BenchPlugBoard, benchAddMapping)(benchmark::State & st)
 {
     auto cpy(p);
@@ -53,4 +39,18 @@ BENCHMARK_F(BenchPlugBoard, benchIsValid)(benchmark::State & st)
 {
     for (auto _ : st)
         benchmark::DoNotOptimize(p.isValidForAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+}
+
+BENCHMARK_F(BenchPlugBoard, benchMap)(benchmark::State & st)
+{
+    for (auto _ : st)
+        benchmark::DoNotOptimize(p.map('A'));
+    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()));
+}
+
+BENCHMARK_F(BenchPlugBoard, benchNotMapped)(benchmark::State & st)
+{
+    for (auto _ : st)
+        benchmark::DoNotOptimize(p.map('B'));
+    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()));
 }

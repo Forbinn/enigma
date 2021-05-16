@@ -20,6 +20,22 @@ BENCHMARK_DEFINE_F(BenchRotors, benchConvertX)(benchmark::State & st)
 }
 BENCHMARK_REGISTER_F(BenchRotors, benchConvertX)->Range(10, 10 << 10);
 
+BENCHMARK_DEFINE_F(BenchRotors, benchRemoveRotor)(benchmark::State & st)
+{
+    for (auto _ : st)
+    {
+        auto cpy(r);
+
+        const auto start = std::chrono::high_resolution_clock::now();
+        cpy.removeRotor(1);
+        const auto end = std::chrono::high_resolution_clock::now();
+
+        const auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+        st.SetIterationTime(elapsed_seconds.count());
+    }
+}
+BENCHMARK_REGISTER_F(BenchRotors, benchRemoveRotor)->UseManualTime();
+
 BENCHMARK_F(BenchRotors, benchReset)(benchmark::State & st)
 {
     for (auto _ : st)
@@ -46,19 +62,3 @@ BENCHMARK_F(BenchRotors, benchPrependRotor)(benchmark::State & st)
     for (auto _ : st)
         rs.prependRotor("ESOVPZJAYQUIRHXLNFTGKDCMWB");
 }
-
-BENCHMARK_DEFINE_F(BenchRotors, benchRemoveRotor)(benchmark::State & st)
-{
-    for (auto _ : st)
-    {
-        auto cpy(r);
-
-        const auto start = std::chrono::high_resolution_clock::now();
-        cpy.removeRotor(1);
-        const auto end = std::chrono::high_resolution_clock::now();
-
-        const auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-        st.SetIterationTime(elapsed_seconds.count());
-    }
-}
-BENCHMARK_REGISTER_F(BenchRotors, benchRemoveRotor)->UseManualTime();

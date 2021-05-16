@@ -18,26 +18,6 @@ BENCHMARK_F(BenchRotor, benchRotationBack)(benchmark::State & st)
         r.rotate(false);
 }
 
-BENCHMARK_DEFINE_F(BenchRotor, benchConvertToX)(benchmark::State & st)
-{
-    for (auto _ : st)
-        for (int64_t i = 0; i < st.range(); ++i)
-            benchmark::DoNotOptimize(r.convertTo(0));
-
-    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()) * st.range());
-}
-BENCHMARK_REGISTER_F(BenchRotor, benchConvertToX)->Range(10, 10 << 10);
-
-BENCHMARK_DEFINE_F(BenchRotor, benchConvertFromX)(benchmark::State & st)
-{
-    for (auto _ : st)
-        for (int64_t i = 0; i < st.range(); ++i)
-            benchmark::DoNotOptimize(r.convertFrom(0));
-
-    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()) * st.range());
-}
-BENCHMARK_REGISTER_F(BenchRotor, benchConvertFromX)->Range(10, 10 << 10);
-
 BENCHMARK_F(BenchRotor, benchSetAlphabet)(benchmark::State & st)
 {
     bool firstAlphabet = true;
@@ -74,3 +54,23 @@ BENCHMARK_F(BenchRotor, benchIsInNotch)(benchmark::State & st)
     for (auto _ : st)
         benchmark::DoNotOptimize(r.isInNotchPosition());
 }
+
+BENCHMARK_DEFINE_F(BenchRotor, benchConvertToX)(benchmark::State & st)
+{
+    for (auto _ : st)
+        for (int64_t i = 0; i < st.range(); ++i)
+            benchmark::DoNotOptimize(r.convertTo(0));
+
+    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()) * st.range());
+}
+BENCHMARK_REGISTER_F(BenchRotor, benchConvertToX)->Range(10, 10 << 10);
+
+BENCHMARK_DEFINE_F(BenchRotor, benchConvertFromX)(benchmark::State & st)
+{
+    for (auto _ : st)
+        for (int64_t i = 0; i < st.range(); ++i)
+            benchmark::DoNotOptimize(r.convertFrom(0));
+
+    st.SetItemsProcessed(static_cast<int64_t>(st.iterations()) * st.range());
+}
+BENCHMARK_REGISTER_F(BenchRotor, benchConvertFromX)->Range(10, 10 << 10);
