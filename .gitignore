@@ -34,5 +34,8 @@
 # Build folder
 build/
 
-# CMake auto-generated files
 *.user
+
+# CMake auto-generated files
+CMakeCache.txt
+CMakeFiles
