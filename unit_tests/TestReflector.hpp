@@ -19,6 +19,7 @@ public:
     void testIsValid();
     void testConvert();
     void testConvertInvalid();
+    void testNoOpRotation();
 
 private:
     Enigma::Reflector _defaultRefector;

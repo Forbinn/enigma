@@ -10,7 +10,7 @@ public:
     bool isValid() const override;
 
 public:
-    bool rotate(bool) override;
+    bool rotate(bool = true) override;
 
 public:
     std::size_t convertFrom(std::size_t idx) const override { return convertTo(idx); }

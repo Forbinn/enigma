@@ -43,3 +43,14 @@ void TestReflector::testConvertInvalid()
     CPPUNIT_ASSERT_EQUAL(Enigma::string::npos, _invalidRefector.convert(25));
     CPPUNIT_ASSERT_EQUAL(Enigma::string::npos, _invalidRefector.convert(28));
 }
+
+void TestReflector::testNoOpRotation()
+{
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
+    _r.rotate();
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
+
+    const auto enc = _r.convert(0);
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
+    CPPUNIT_ASSERT_EQUAL(enc, _r.convert(0));
+}
