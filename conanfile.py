@@ -2,7 +2,7 @@ from conans import ConanFile, CMake
 
 class EnigmaConan(ConanFile):
     name        = "enigma"
-    version     = "0.1.1"
+    version     = "0.1.2"
 
     license     = "MIT"
     author      = "Forbinn <vincent.54.leroy@gmail.com>"
