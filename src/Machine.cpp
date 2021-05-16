@@ -8,7 +8,7 @@ bool Enigma::Machine::isValid() const
     if (!_rotors.isValid())
         return false;
 
-    return true;
+    return _plugboard.isValidForAlphabet(_rotors.inputAlphabet());
 }
 
 Enigma::value_type Enigma::Machine::convert(Enigma::value_type v)

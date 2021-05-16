@@ -29,6 +29,8 @@ public:
 
     std::size_t rotorCount() const { return _rotors.size(); }
 
+    const string & inputAlphabet() const { return _inputAlphabet; }
+
 public:
     Reflector & reflector()             { return _reflector; }
     const Reflector & reflector() const { return _reflector; }
