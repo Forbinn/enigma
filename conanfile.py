@@ -2,7 +2,7 @@ from conans import ConanFile, CMake
 
 class EnigmaConan(ConanFile):
     name        = "enigma"
-    version     = "0.1.1"
+    version     = "0.1.2"
 
     license     = "MIT"
     author      = "Forbinn <vincent.54.leroy@gmail.com>"
@@ -14,42 +14,34 @@ class EnigmaConan(ConanFile):
 
     options     = {
         "shared": [True, False],
-        "fPIC": [True, False],
 
-        "with_test": [True, False],
+        "with_tests": [True, False],
         "with_benchmark": [True, False]
     }
     default_options = {
         "shared": False,
-        "fPIC": True,
 
-        "with_test": True,
+        "with_tests": True,
         "with_benchmark": False
     }
 
     generators      = "cmake_find_package"
     exports_sources = "src/*", "unit_tests/*", "benchmark/*", "CMakeLists.txt"
 
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
-
     def build_requirements(self):
-        if self.options.with_test:
+        if self.options.with_tests:
             self.build_requires("cppunit/1.15.1")
         if self.options.with_benchmark:
             self.build_requires("benchmark/1.5.2")
 
     def build(self):
         cmake = CMake(self)
-        if self.options.with_test:
-            cmake.definitions["ENIGMA_TESTS"] = "ON"
-        if self.options.with_benchmark:
-            cmake.definitions["ENIGMA_BENCHMARK"] = "ON"
+        cmake.definitions["ENIGMA_TESTS"] = "ON" if self.options.with_tests else "OFF"
+        cmake.definitions["ENIGMA_BENCHMARK"] = "ON" if self.options.with_benchmark else "OFF"
 
         cmake.configure()
         cmake.build()
-        if self.options.with_test:
+        if self.options.with_tests:
             cmake.test(args=["--", "ARGS=--progress"], output_on_failure=True)
         if self.options.with_benchmark:
             self.run("./benchmark/enigma_benchmark", run_environment=True)
@@ -66,5 +58,5 @@ class EnigmaConan(ConanFile):
         self.cpp_info.libs = ["enigma"]
 
     def package_id(self):
-        del self.info.options.with_test
+        del self.info.options.with_tests
         del self.info.options.with_benchmark
