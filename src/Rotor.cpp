@@ -153,7 +153,7 @@ bool Enigma::Rotor::_hasCrossedANotch(bool forward) const
 {
     for (const auto & notch : _notches)
     {
-        if (forward && _rotation == notch + 1)
+        if (forward && (_rotation == notch + 1 || (notch == _wires.size() - 1 && _rotation == 0)))
             return true;
         else if (!forward && _rotation == notch)
             return true;
