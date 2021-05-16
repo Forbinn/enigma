@@ -24,8 +24,8 @@ public:
     Rotor & insertRotor(std::size_t idx, const string & alphabet);
     void removeRotor(std::size_t idx);
 
-    Rotor & rotor(std::size_t idx)             { return _rotors.at(idx); }
-    const Rotor & rotor(std::size_t idx) const { return _rotors.at(idx); }
+    Rotor & rotor(std::size_t idx)             { return *std::next(_rotors.begin(), static_cast<int>(idx)); }
+    const Rotor & rotor(std::size_t idx) const { return *std::next(_rotors.begin(), static_cast<int>(idx)); }
 
     std::size_t rotorCount() const { return _rotors.size(); }
 

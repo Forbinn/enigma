@@ -75,11 +75,11 @@ void Enigma::Rotors::reset()
 
 void Enigma::Rotors::_rotateRotors()
 {
-    const auto firstRotorHasCrossedANotch = _rotors.at(0).rotate();
+    const auto firstRotorHasCrossedANotch = _rotors.begin()->rotate();
     if (_rotors.size() == 1)
         return ;
 
-    if (firstRotorHasCrossedANotch || _rotors.at(1).isInNotchPosition())
+    if (firstRotorHasCrossedANotch || std::next(_rotors.begin())->isInNotchPosition())
     {
         for (auto itr = std::next(_rotors.begin()); itr != _rotors.end(); ++itr)
             if (!itr->rotate())

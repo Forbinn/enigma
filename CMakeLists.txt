@@ -3,5 +3,11 @@ project(enigma LANGUAGES CXX)
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(unit_tests)
+if (ENIGMA_TESTS)
+    enable_testing()
+    add_subdirectory(unit_tests)
+endif()
+
+if (ENIGMA_BENCHMARK)
+    add_subdirectory(benchmark)
+endif()

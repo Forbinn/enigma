@@ -2,7 +2,7 @@ from conans import ConanFile, CMake
 
 class EnigmaConan(ConanFile):
     name        = "enigma"
-    version     = "0.1.0"
+    version     = "0.1.1"
 
     license     = "MIT"
     author      = "Forbinn <vincent.54.leroy@gmail.com>"
@@ -14,29 +14,45 @@ class EnigmaConan(ConanFile):
 
     options     = {
         "shared": [True, False],
-        "fPIC": [True, False]
+        "fPIC": [True, False],
+
+        "with_test": [True, False],
+        "with_benchmark": [True, False]
     }
     default_options = {
         "shared": False,
-        "fPIC": True
+        "fPIC": True,
+
+        "with_test": True,
+        "with_benchmark": False
     }
 
-    build_requires = [
-        "cppunit/1.15.1"
-    ]
-
     generators      = "cmake_find_package"
-    exports_sources = "src/*", "unit_tests/*", "CMakeLists.txt"
+    exports_sources = "src/*", "unit_tests/*", "benchmark/*", "CMakeLists.txt"
 
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
+    def build_requirements(self):
+        if self.options.with_test:
+            self.build_requires("cppunit/1.15.1")
+        if self.options.with_benchmark:
+            self.build_requires("benchmark/1.5.2")
+
     def build(self):
         cmake = CMake(self)
+        if self.options.with_test:
+            cmake.definitions["ENIGMA_TESTS"] = "ON"
+        if self.options.with_benchmark:
+            cmake.definitions["ENIGMA_BENCHMARK"] = "ON"
+
         cmake.configure()
         cmake.build()
-        cmake.test(args=["--", "ARGS=--progress"], output_on_failure=True)
+        if self.options.with_test:
+            cmake.test(args=["--", "ARGS=--progress"], output_on_failure=True)
+        if self.options.with_benchmark:
+            self.run("./benchmark/enigma_benchmark", run_environment=True)
 
     def package(self):
         self.copy("*.hpp",    dst=f"include/{self.name}", src="src")
@@ -48,3 +64,7 @@ class EnigmaConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["enigma"]
+
+    def package_id(self):
+        del self.info.options.with_test
+        del self.info.options.with_benchmark
