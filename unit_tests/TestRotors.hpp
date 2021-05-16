@@ -11,6 +11,8 @@ class TestRotors : public CppUnit::TestFixture
     CPPUNIT_TEST(testReset);
     CPPUNIT_TEST(testConvert);
     CPPUNIT_TEST(testConvertInvalid);
+    CPPUNIT_TEST(testNormalSequence);
+    CPPUNIT_TEST(testDoubleStepSequence);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -21,10 +23,13 @@ public:
     void testReset();
     void testConvert();
     void testConvertInvalid();
+    void testNormalSequence();
+    void testDoubleStepSequence();
 
 private:
     Enigma::Rotors _defaultRotors;
     Enigma::Rotors _invalidRotors;
-    Enigma::Rotors _r;
+    Enigma::Rotors _r123;
+    Enigma::Rotors _r654;
 };
 
