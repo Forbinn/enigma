@@ -25,7 +25,7 @@ void TestRotors::testIsValid()
     CPPUNIT_ASSERT(_r123.isValid());
 
     _defaultRotors.appendRotor("abcdefghijklmnopqrstuvwxyz");
-    _defaultRotors.setReflectorAlphabet("xwgolqytzderjpumbcsvkianfh");
+    _defaultRotors.setReflectorAlphabet("xwgolqytzderjpumbcvskianfh");
     CPPUNIT_ASSERT(_defaultRotors.isValid());
     _defaultRotors.clear();
     CPPUNIT_ASSERT(!_defaultRotors.isValid());

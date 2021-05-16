@@ -7,6 +7,9 @@ namespace Enigma
 class ENIGMA_EXPORT Reflector : public Rotor
 {
 public:
+    Reflector();
+    Reflector(const string & alphabet);
+
     bool isValid() const override;
 
 public:

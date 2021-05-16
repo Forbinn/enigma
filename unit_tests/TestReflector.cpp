@@ -20,9 +20,15 @@ void TestReflector::testIsValid()
     CPPUNIT_ASSERT(!_invalidRefector.isValid());
     CPPUNIT_ASSERT(_r.isValid());
 
-    _defaultRefector.setAlphabet("abcd");
+    _defaultRefector.setAlphabet("bdac");
     CPPUNIT_ASSERT(_defaultRefector.isValid());
     _defaultRefector.clear();
+    CPPUNIT_ASSERT(!_defaultRefector.isValid());
+
+    // The following rotor must not be considered valid because
+    // it can return a value equal to its input which is not
+    // permitted for a reflector
+    _defaultRefector.setAlphabet("abcd");
     CPPUNIT_ASSERT(!_defaultRefector.isValid());
 }
 

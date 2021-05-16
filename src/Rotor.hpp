@@ -19,7 +19,7 @@ public:
     virtual bool isValid() const { return !_wires.empty(); }
 
 public:
-    void setAlphabet(const string & alphabet);
+    virtual void setAlphabet(const string & alphabet);
 
     void setNotches(const std::vector<std::size_t> & notches);
     void addNotch(std::size_t idx);
@@ -41,6 +41,9 @@ public:
     void clear();
     void reset();
 
+protected:
+    Rotor(bool allowStraightWire);
+
 private:
     void _rotateWires(int count);
     bool _hasCrossedANotch(bool forward) const;
@@ -51,5 +54,10 @@ protected:
 private:
     std::vector<std::size_t> _notches;
     std::size_t              _rotation = 0;
+
+private:
+    // Cannot be set to const because the class will become unusable in a std::vector
+    // It will loose the MoveAssignable requirement
+    bool _allowStraightWire = true;
 };
 } // !namespace Enigma

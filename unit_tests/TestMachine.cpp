@@ -33,7 +33,7 @@ void TestMachine::testIsValid()
     Enigma::Machine m;
     CPPUNIT_ASSERT(!m.isValid());
     m.rotors().appendRotor("ABCDEF");
-    m.rotors().setReflectorAlphabet("FBCEAD");
+    m.rotors().setReflectorAlphabet("FCBEAD");
     CPPUNIT_ASSERT(m.isValid());
 }
 
@@ -41,7 +41,7 @@ void TestMachine::testClear()
 {
     Enigma::Machine m;
     m.rotors().appendRotor("ABCDEF");
-    m.rotors().setReflectorAlphabet("FBCEAD");
+    m.rotors().setReflectorAlphabet("FCBEAD");
     CPPUNIT_ASSERT(m.isValid());
     m.clear();
     CPPUNIT_ASSERT(!m.isValid());

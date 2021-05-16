@@ -7,6 +7,11 @@ Enigma::Rotor::Rotor(const string & alphabet)
     setAlphabet(alphabet);
 }
 
+Enigma::Rotor::Rotor(bool allowStraightWire)
+    : _allowStraightWire { allowStraightWire }
+{
+}
+
 void Enigma::Rotor::setAlphabet(const string & alphabet)
 {
     clear();
@@ -21,6 +26,12 @@ void Enigma::Rotor::setAlphabet(const string & alphabet)
         const auto & c  = alphabet.at(i);
         const auto idx  = sortedAlphabet.find(c);
         _wires[i].first = static_cast<int>(idx) - static_cast<int>(i);
+
+        if (!_allowStraightWire && i == idx)
+        {
+            _wires.clear();
+            return ;
+        }
     }
 
     for (std::size_t i = 0; i < sortedAlphabet.size(); ++i)
