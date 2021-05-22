@@ -11,7 +11,6 @@ namespace Enigma
 {
 class ENIGMA_EXPORT Machine
 {
-    // TODO: Fix README file formatting
 public:
     using RotorType  = std::variant<Rotor::Standard, Reflector::Standard>;
     using ORotorType = std::optional<RotorType>;

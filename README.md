@@ -1,23 +1,27 @@
-
 # enigma
 A C++20 library of the Enigma machine
 
 ## Build
 
 ### Using conan
-
 In order to build this library, the simplest way it to use [conan](https://conan.io/).
+
 `conan create .`
+
 This will build the library with default options and place it in your local cache.
 
 If you want, you can build it in a specific folder:
+
 `conan install -if build .`
+
 `conan build -bf build .`
 
 ### Using cmake
 
 You can also use cmake natively to build this library.
+
 `cmake -B build .`
+
 `cmake --build build`
 
 ## Using the library
