@@ -15,6 +15,12 @@ std::size_t Enigma::PlugBoard::mappingCount() const
     return _mapping.size() / 2;
 }
 
+void Enigma::PlugBoard::setMapping(const Enigma::PlugBoard::container & mapping)
+{
+    for (const auto & p : mapping)
+        addMapping(p.first, p.second);
+}
+
 void Enigma::PlugBoard::addMapping(value_type v1, value_type v2)
 {
     if (v1 == v2)

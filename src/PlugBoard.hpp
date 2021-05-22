@@ -19,10 +19,12 @@ public:
     const container & mapping() const { return _mapping; }
     std::size_t mappingCount() const;
 
+    void setMapping(const container & mapping);
+    // TODO: create function to add / remove multiple mapping at the same time
     void addMapping(value_type v1, value_type v2);
     void removeMapping(value_type v);
 
-    // TODO: create a setMapping function
+    // TODO: create operator[] to get / set a mapping
 
 public:
     value_type map(value_type v) const;
