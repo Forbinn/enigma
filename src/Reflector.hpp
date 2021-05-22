@@ -48,7 +48,7 @@ public:
 
 public:
     Reflector();
-    Reflector(const string & alphabet);
+    Reflector(string_view alphabet);
     Reflector(Standard r);
 
     bool isValid() const override;
@@ -57,7 +57,7 @@ public:
     bool rotate(bool = true) override;
 
 public:
-    static Enigma::string alphabetOfStandardReflector(Standard r);
+    static string_view alphabetOfStandardReflector(Standard r);
 
 public:
     std::size_t convertFrom(std::size_t idx) const override { return convertTo(idx); }

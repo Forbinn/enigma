@@ -100,15 +100,14 @@ public:
 
 public:
     Rotor() = default;
-    Rotor(const string & alphabet, const string & notches = {});
+    Rotor(string_view alphabet, string_view notches = {});
     Rotor(Standard r);
     virtual ~Rotor() = default;
 
     virtual bool isValid() const { return !_wires.empty(); }
 
 public:
-    // TODO: use a string_view intead
-    void setAlphabet(const string & alphabet, const string & notches = {});
+    void setAlphabet(string_view alphabet, string_view notches = {});
 
     void setNotches(const std::vector<std::size_t> & notches);
     void addNotch(std::size_t idx);
@@ -131,8 +130,8 @@ public:
     void reset();
 
 public:
-    static Enigma::string alphabetOfStandardRotor(Standard r);
-    static Enigma::string notchesOfStandardRotor(Standard r);
+    static string_view alphabetOfStandardRotor(Standard r);
+    static string_view notchesOfStandardRotor(Standard r);
 
 protected:
     Rotor(bool allowStraightWire);

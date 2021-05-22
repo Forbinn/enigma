@@ -5,7 +5,7 @@ Enigma::Reflector::Reflector()
 {
 }
 
-Enigma::Reflector::Reflector(const Enigma::string & alphabet)
+Enigma::Reflector::Reflector(string_view alphabet)
     : Rotor { false }
 {
     setAlphabet(alphabet);
@@ -27,7 +27,7 @@ bool Enigma::Reflector::rotate(bool)
     return false;
 }
 
-Enigma::string Enigma::Reflector::alphabetOfStandardReflector(Standard r)
+Enigma::string_view Enigma::Reflector::alphabetOfStandardReflector(Standard r)
 {
     switch (r)
     {

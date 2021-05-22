@@ -48,7 +48,7 @@ public:
 
 public:
     value_type convert(value_type v);
-    string convert(const string & s);
+    string convert(string_view s);
 
 public:
     void clear();
@@ -58,7 +58,7 @@ public:
     // Max 4 rotor and 1 reflector
     static Machine build(Standard machine, ORotorType r1 = {}, ORotorType r2 = {}, ORotorType r3 = {}, ORotorType r4 = {}, ORotorType r5 = {});
 
-    static Machine buildRandomMachine(const string & alphabet = "abcdefghijklmnopqrstuvwxyz",
+    static Machine buildRandomMachine(string_view alphabet = "abcdefghijklmnopqrstuvwxyz",
                                       std::size_t rotorCount = 3,
                                       std::size_t plugboardSwap = 10);
 

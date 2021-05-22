@@ -26,7 +26,7 @@ public:
 public:
     PlugBoard() = default;
 
-    bool isValidForAlphabet(const string & alphabet) const;
+    bool isValidForAlphabet(string_view alphabet) const;
 
     const container & mapping() const { return _mapping; }
     std::size_t mappingCount() const;

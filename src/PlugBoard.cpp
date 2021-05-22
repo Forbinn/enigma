@@ -1,18 +1,18 @@
 #include "PlugBoard.hpp"
 
-Enigma::PlugBoard::Plug::Plug(Enigma::PlugBoard & b, Enigma::value_type v)
+Enigma::PlugBoard::Plug::Plug(PlugBoard & b, value_type v)
     : board { b }
     , value { v }
 {
 }
 
-Enigma::PlugBoard::Plug & Enigma::PlugBoard::Plug::operator=(Enigma::value_type v)
+Enigma::PlugBoard::Plug & Enigma::PlugBoard::Plug::operator=(value_type v)
 {
     board.addMapping(value, v);
     return *this;
 }
 
-bool Enigma::PlugBoard::isValidForAlphabet(const string & alphabet) const
+bool Enigma::PlugBoard::isValidForAlphabet(string_view alphabet) const
 {
     // All mapping values must appear in the alphabet for it to be valid
     for (const auto & p : _mapping)
@@ -27,7 +27,7 @@ std::size_t Enigma::PlugBoard::mappingCount() const
     return _mapping.size() / 2;
 }
 
-void Enigma::PlugBoard::setMapping(const Enigma::PlugBoard::container & mapping)
+void Enigma::PlugBoard::setMapping(const container & mapping)
 {
     for (const auto & p : mapping)
         addMapping(p.first, p.second);
@@ -44,7 +44,7 @@ void Enigma::PlugBoard::clear()
     _mapping.clear();
 }
 
-void Enigma::PlugBoard::_addMappingImpl(Enigma::value_type v1, Enigma::value_type v2)
+void Enigma::PlugBoard::_addMappingImpl(value_type v1, value_type v2)
 {
     if (v1 == v2)
         return ;
@@ -56,7 +56,7 @@ void Enigma::PlugBoard::_addMappingImpl(Enigma::value_type v1, Enigma::value_typ
     _mapping[v2] = v1;
 }
 
-void Enigma::PlugBoard::_removeMappingImpl(Enigma::value_type v)
+void Enigma::PlugBoard::_removeMappingImpl(value_type v)
 {
     const auto itr = _mapping.find(v);
     if (itr == _mapping.end())

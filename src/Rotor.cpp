@@ -2,7 +2,7 @@
 
 #include "Rotor.hpp"
 
-Enigma::Rotor::Rotor(const string & alphabet, const string & notches)
+Enigma::Rotor::Rotor(string_view alphabet, string_view notches)
 {
     setAlphabet(alphabet, notches);
 }
@@ -17,7 +17,7 @@ Enigma::Rotor::Rotor(bool allowStraightWire)
 {
 }
 
-void Enigma::Rotor::setAlphabet(const string & alphabet, const string & notches)
+void Enigma::Rotor::setAlphabet(string_view alphabet, string_view notches)
 {
     clear();
 
@@ -177,7 +177,7 @@ void Enigma::Rotor::reset()
     _rotation = 0;
 }
 
-Enigma::string Enigma::Rotor::alphabetOfStandardRotor(Enigma::Rotor::Standard r)
+Enigma::string_view Enigma::Rotor::alphabetOfStandardRotor(Enigma::Rotor::Standard r)
 {
     switch (r)
     {
@@ -314,7 +314,7 @@ Enigma::string Enigma::Rotor::alphabetOfStandardRotor(Enigma::Rotor::Standard r)
     return {};
 }
 
-Enigma::string Enigma::Rotor::notchesOfStandardRotor(Enigma::Rotor::Standard r)
+Enigma::string_view Enigma::Rotor::notchesOfStandardRotor(Enigma::Rotor::Standard r)
 {
     switch (r)
     {

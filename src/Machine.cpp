@@ -80,7 +80,7 @@ Enigma::value_type Enigma::Machine::convert(value_type v)
     return v;
 }
 
-Enigma::string Enigma::Machine::convert(const string & s)
+Enigma::string Enigma::Machine::convert(string_view s)
 {
     string output;
     output.reserve(s.size());
@@ -154,7 +154,7 @@ Enigma::Machine Enigma::Machine::build(Standard machine, ORotorType r1, ORotorTy
     return m;
 }
 
-Enigma::Machine Enigma::Machine::buildRandomMachine(const string & alphabet,
+Enigma::Machine Enigma::Machine::buildRandomMachine(string_view alphabet,
                                                     std::size_t rotorCount,
                                                     std::size_t plugboardSwap)
 {

@@ -11,7 +11,7 @@ bool Enigma::Rotors::isValid() const
                        [](const auto & rotor){ return rotor.isValid(); });
 }
 
-Enigma::Rotor & Enigma::Rotors::appendRotor(const string & alphabet)
+Enigma::Rotor & Enigma::Rotors::appendRotor(string_view alphabet)
 {
     return insertRotor(_rotors.size(), alphabet);
 }
@@ -21,7 +21,7 @@ Enigma::Rotor & Enigma::Rotors::appendRotor(Rotor::Standard r)
     return insertRotor(_rotors.size(), r);
 }
 
-Enigma::Rotor & Enigma::Rotors::prependRotor(const string & alphabet)
+Enigma::Rotor & Enigma::Rotors::prependRotor(string_view alphabet)
 {
     return insertRotor(0, alphabet);
 }
@@ -31,7 +31,7 @@ Enigma::Rotor & Enigma::Rotors::prependRotor(Rotor::Standard r)
     return insertRotor(0, r);
 }
 
-Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, const string & alphabet)
+Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, string_view alphabet)
 {
     idx = std::clamp<std::size_t>(0, idx, _rotors.size());
     if (idx == 0)
@@ -112,7 +112,7 @@ void Enigma::Rotors::_rotateRotors()
     }
 }
 
-void Enigma::Rotors::_setNewInputAlphabet(const string & alphabet)
+void Enigma::Rotors::_setNewInputAlphabet(string_view alphabet)
 {
     _inputAlphabet = alphabet;
     std::sort(_inputAlphabet.begin(), _inputAlphabet.end());
