@@ -19,7 +19,6 @@ public:
     bool isValid() const;
 
 public:
-    // TODO: create a function to add / remove multiple rotor at the same time
     Rotor & appendRotor(const string & alphabet);
     Rotor & appendRotor(Rotor::Standard r);
     Rotor & prependRotor(const string & alphabet);
