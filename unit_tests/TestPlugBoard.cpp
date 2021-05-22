@@ -69,3 +69,23 @@ void TestPlugBoard::testMappingOverride()
     CPPUNIT_ASSERT_EQUAL('c', _p.map('b'));
     CPPUNIT_ASSERT_EQUAL('b', _p.map('c'));
 }
+
+void TestPlugBoard::testOperatorSquare()
+{
+    Enigma::PlugBoard p;
+    p['a'] = 'b';
+
+    const auto cp(p);
+
+    CPPUNIT_ASSERT_EQUAL('b', p.map('a'));
+    CPPUNIT_ASSERT_EQUAL('a', p.map('b'));
+    CPPUNIT_ASSERT_EQUAL('?', p.map('?'));
+
+    CPPUNIT_ASSERT_EQUAL('b', cp['a']);
+    CPPUNIT_ASSERT_EQUAL('a', cp['b']);
+    CPPUNIT_ASSERT_EQUAL('?', cp['?']);
+
+    CPPUNIT_ASSERT_EQUAL('b', static_cast<Enigma::value_type>(p['a']));
+    CPPUNIT_ASSERT_EQUAL('a', static_cast<Enigma::value_type>(p['b']));
+    CPPUNIT_ASSERT_EQUAL('?', static_cast<Enigma::value_type>(p['?']));
+}

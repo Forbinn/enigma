@@ -1,5 +1,17 @@
 #include "PlugBoard.hpp"
 
+Enigma::PlugBoard::Plug::Plug(Enigma::PlugBoard & b, Enigma::value_type v)
+    : board { b }
+    , value { v }
+{
+}
+
+Enigma::PlugBoard::Plug & Enigma::PlugBoard::Plug::operator=(Enigma::value_type v)
+{
+    board.addMapping(value, v);
+    return *this;
+}
+
 bool Enigma::PlugBoard::isValidForAlphabet(const string & alphabet) const
 {
     // All mapping values must appear in the alphabet for it to be valid

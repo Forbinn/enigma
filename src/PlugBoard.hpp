@@ -9,6 +9,18 @@ namespace Enigma
 class ENIGMA_EXPORT PlugBoard
 {
 public:
+    struct Plug
+    {
+        Plug(PlugBoard & b, value_type v);
+
+        operator value_type() const { return board.map(value); }
+        Plug & operator=(value_type v);
+
+        PlugBoard & board;
+        value_type  value;
+    };
+
+public:
     using container = std::unordered_map<value_type, value_type>;
 
 public:
@@ -37,7 +49,9 @@ public:
             removeMapping(std::forward<Args>(args)...);
     }
 
-    // TODO: create operator[] to get / set a mapping
+public:
+    Plug operator[](value_type v)             { return { *this, v }; }
+    value_type operator[](value_type v) const { return map(v); }
 
 public:
     value_type map(value_type v) const;
