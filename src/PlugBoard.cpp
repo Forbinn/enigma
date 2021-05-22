@@ -21,7 +21,18 @@ void Enigma::PlugBoard::setMapping(const Enigma::PlugBoard::container & mapping)
         addMapping(p.first, p.second);
 }
 
-void Enigma::PlugBoard::addMapping(value_type v1, value_type v2)
+Enigma::value_type Enigma::PlugBoard::map(value_type v) const
+{
+    const auto itr = _mapping.find(v);
+    return itr == _mapping.end() ? v : itr->second;
+}
+
+void Enigma::PlugBoard::clear()
+{
+    _mapping.clear();
+}
+
+void Enigma::PlugBoard::_addMappingImpl(Enigma::value_type v1, Enigma::value_type v2)
 {
     if (v1 == v2)
         return ;
@@ -33,7 +44,7 @@ void Enigma::PlugBoard::addMapping(value_type v1, value_type v2)
     _mapping[v2] = v1;
 }
 
-void Enigma::PlugBoard::removeMapping(value_type v)
+void Enigma::PlugBoard::_removeMappingImpl(Enigma::value_type v)
 {
     const auto itr = _mapping.find(v);
     if (itr == _mapping.end())
@@ -42,15 +53,4 @@ void Enigma::PlugBoard::removeMapping(value_type v)
     const auto itrMap = _mapping.find(itr->second);
     _mapping.erase(itr);
     _mapping.erase(itrMap);
-}
-
-Enigma::value_type Enigma::PlugBoard::map(value_type v) const
-{
-    const auto itr = _mapping.find(v);
-    return itr == _mapping.end() ? v : itr->second;
-}
-
-void Enigma::PlugBoard::clear()
-{
-    _mapping.clear();
 }

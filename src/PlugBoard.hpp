@@ -20,9 +20,22 @@ public:
     std::size_t mappingCount() const;
 
     void setMapping(const container & mapping);
-    // TODO: create function to add / remove multiple mapping at the same time
-    void addMapping(value_type v1, value_type v2);
-    void removeMapping(value_type v);
+    template<typename ... Args>
+    void addMapping(value_type v1, value_type v2, Args && ... args)
+    {
+        static_assert(sizeof...(args) % 2 == 0, "The number of argument must be even");
+
+        _addMappingImpl(v1, v2);
+        if constexpr (sizeof...(args) > 0)
+            addMapping(std::forward<Args>(args)...);
+    }
+    template<typename ... Args>
+    void removeMapping(value_type v, Args && ... args)
+    {
+        _removeMappingImpl(v);
+        if constexpr (sizeof...(args) > 0)
+            removeMapping(std::forward<Args>(args)...);
+    }
 
     // TODO: create operator[] to get / set a mapping
 
@@ -31,6 +44,10 @@ public:
 
 public:
     void clear();
+
+private:
+    void _addMappingImpl(value_type v1, value_type v2);
+    void _removeMappingImpl(value_type v);
 
 private:
     container _mapping;
