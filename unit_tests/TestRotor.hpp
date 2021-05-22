@@ -16,6 +16,7 @@ class TestRotor : public CppUnit::TestFixture
     CPPUNIT_TEST(testRotateInvalid);
     CPPUNIT_TEST(testRotateAndConvertFrom);
     CPPUNIT_TEST(testRotateAndConvertTo);
+    CPPUNIT_TEST(testStandardRotor);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -31,6 +32,7 @@ public:
     void testRotateInvalid();
     void testRotateAndConvertFrom();
     void testRotateAndConvertTo();
+    void testStandardRotor();
 
 private:
     Enigma::Rotor _defaultRotor;

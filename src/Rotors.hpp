@@ -19,9 +19,13 @@ public:
     bool isValid() const;
 
 public:
+    // TODO: create a function to add / remove multiple rotor at the same time
     Rotor & appendRotor(const string & alphabet);
+    Rotor & appendRotor(Rotor::Standard r);
     Rotor & prependRotor(const string & alphabet);
+    Rotor & prependRotor(Rotor::Standard r);
     Rotor & insertRotor(std::size_t idx, const string & alphabet);
+    Rotor & insertRotor(std::size_t idx, Rotor::Standard r);
     void removeRotor(std::size_t idx);
 
     Rotor & rotor(std::size_t idx)             { return *std::next(_rotors.begin(), static_cast<int>(idx)); }
@@ -31,11 +35,14 @@ public:
 
     const string & inputAlphabet() const { return _inputAlphabet; }
 
+    // TODO: create an operator[] that returns a Rotor (/ Reflector?)
+
 public:
     Reflector & reflector()             { return _reflector; }
     const Reflector & reflector() const { return _reflector; }
 
     void setReflectorAlphabet(const string & alphabet) { _reflector.setAlphabet(alphabet); }
+    void setReflector(Reflector::Standard r);
 
 public:
     value_type convert(value_type c);

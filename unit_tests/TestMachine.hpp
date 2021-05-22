@@ -12,6 +12,7 @@ class TestMachine : public CppUnit::TestFixture
     CPPUNIT_TEST(testReset);
     CPPUNIT_TEST(testConvertSingleValue);
     CPPUNIT_TEST(testConvertString);
+    CPPUNIT_TEST(testDefaultMachine);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -22,6 +23,7 @@ public:
     void testReset();
     void testConvertSingleValue();
     void testConvertString();
+    void testDefaultMachine();
 
 private:
     Enigma::Machine _m321;

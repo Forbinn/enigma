@@ -222,3 +222,16 @@ void TestRotor::testRotateAndConvertTo()
     CPPUNIT_ASSERT_EQUAL(3ul,  _r.convertTo(2));
     CPPUNIT_ASSERT_EQUAL(23ul, _r.convertTo(17));
 }
+
+void TestRotor::testStandardRotor()
+{
+    const Enigma::Rotor m3R1(Enigma::Rotor::Standard::M3_I);
+    CPPUNIT_ASSERT(m3R1.isValid());
+    CPPUNIT_ASSERT_EQUAL(4ul, m3R1.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(20ul, m3R1.convertFrom(0));
+
+    const Enigma::Rotor zR1(Enigma::Rotor::Standard::Z_I);
+    CPPUNIT_ASSERT(zR1.isValid());
+    CPPUNIT_ASSERT_EQUAL(6ul, zR1.convertTo(0));
+    CPPUNIT_ASSERT_EQUAL(0ul, zR1.convertFrom(6ul));
+}
