@@ -69,12 +69,12 @@ Enigma::value_type Enigma::Rotors::convert(value_type c)
     if (!isValid())
         return {};
 
-    if (!_isValueInAlphabet(c))
+    auto idx = _getIdxOfValue(c);
+    if (idx == string::npos)
         return c;
 
     _rotateRotors();
 
-    auto idx = _getIdxOfValue(c);
     for (auto itr = _rotors.begin(); itr != _rotors.end(); ++itr)
         idx = itr->convertTo(idx);
 
@@ -116,11 +116,6 @@ void Enigma::Rotors::_setNewInputAlphabet(string_view alphabet)
 {
     _inputAlphabet = alphabet;
     std::sort(_inputAlphabet.begin(), _inputAlphabet.end());
-}
-
-bool Enigma::Rotors::_isValueInAlphabet(value_type c) const
-{
-    return _inputAlphabet.find(c) != string::npos;
 }
 
 std::size_t Enigma::Rotors::_getIdxOfValue(value_type c) const

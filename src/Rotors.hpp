@@ -54,8 +54,6 @@ private:
     void _rotateRotors();
     void _setNewInputAlphabet(string_view alphabet);
 
-    bool _isValueInAlphabet(value_type c) const;
-
 private:
     std::size_t _getIdxOfValue(value_type c) const;
     value_type _getValueOfIdx(std::size_t idx) const;
