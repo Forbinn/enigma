@@ -7,15 +7,15 @@
 class TestRotor : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(TestRotor);
-    //CPPUNIT_TEST(testIsValid);
-    //CPPUNIT_TEST(testConvertFrom);
-    //CPPUNIT_TEST(testConvertTo);
-    //CPPUNIT_TEST(testConvertInvalid);
+    CPPUNIT_TEST(testIsValid);
+    CPPUNIT_TEST(testConvertFrom);
+    CPPUNIT_TEST(testConvertTo);
+    CPPUNIT_TEST(testConvertInvalid);
     CPPUNIT_TEST(testReset);
-    //CPPUNIT_TEST(testRotate);
-    //CPPUNIT_TEST(testRotateInvalid);
-    //CPPUNIT_TEST(testRotateAndConvertFrom);
-    //CPPUNIT_TEST(testRotateAndConvertTo);
+    CPPUNIT_TEST(testRotate);
+    CPPUNIT_TEST(testRotateInvalid);
+    CPPUNIT_TEST(testRotateAndConvertFrom);
+    CPPUNIT_TEST(testRotateAndConvertTo);
     CPPUNIT_TEST_SUITE_END();
 
 public:
