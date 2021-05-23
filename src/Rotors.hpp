@@ -34,8 +34,6 @@ public:
 
     const string & inputAlphabet() const { return _inputAlphabet; }
 
-    // TODO: create an operator[] that returns a Rotor (/ Reflector?)
-
 public:
     Reflector & reflector()             { return _reflector; }
     const Reflector & reflector() const { return _reflector; }
