@@ -11,9 +11,9 @@ bool Enigma::Rotors::isValid() const
                        [](const auto & rotor){ return rotor.isValid(); });
 }
 
-Enigma::Rotor & Enigma::Rotors::appendRotor(string_view alphabet)
+Enigma::Rotor & Enigma::Rotors::appendRotor(string_view alphabet, string_view notches)
 {
-    return insertRotor(_rotors.size(), alphabet);
+    return insertRotor(_rotors.size(), alphabet, notches);
 }
 
 Enigma::Rotor & Enigma::Rotors::appendRotor(Rotor::Standard r)
@@ -21,9 +21,9 @@ Enigma::Rotor & Enigma::Rotors::appendRotor(Rotor::Standard r)
     return insertRotor(_rotors.size(), r);
 }
 
-Enigma::Rotor & Enigma::Rotors::prependRotor(string_view alphabet)
+Enigma::Rotor & Enigma::Rotors::prependRotor(string_view alphabet, string_view notches)
 {
-    return insertRotor(0, alphabet);
+    return insertRotor(0, alphabet, notches);
 }
 
 Enigma::Rotor & Enigma::Rotors::prependRotor(Rotor::Standard r)
@@ -31,14 +31,14 @@ Enigma::Rotor & Enigma::Rotors::prependRotor(Rotor::Standard r)
     return insertRotor(0, r);
 }
 
-Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, string_view alphabet)
+Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, string_view alphabet, string_view notches)
 {
     idx = std::clamp<std::size_t>(0, idx, _rotors.size());
     if (idx == 0)
         _setNewInputAlphabet(alphabet);
 
     const auto itr = std::next(_rotors.begin(), static_cast<container::iterator::difference_type>(idx));
-    return *_rotors.emplace(itr, alphabet);
+    return *_rotors.emplace(itr, alphabet, notches);
 }
 
 Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, Rotor::Standard r)

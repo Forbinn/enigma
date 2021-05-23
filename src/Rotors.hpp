@@ -19,11 +19,11 @@ public:
     bool isValid() const;
 
 public:
-    Rotor & appendRotor(string_view alphabet);
+    Rotor & appendRotor(string_view alphabet, string_view notches = {});
     Rotor & appendRotor(Rotor::Standard r);
-    Rotor & prependRotor(string_view alphabet);
+    Rotor & prependRotor(string_view alphabet, string_view notches = {});
     Rotor & prependRotor(Rotor::Standard r);
-    Rotor & insertRotor(std::size_t idx, string_view alphabet);
+    Rotor & insertRotor(std::size_t idx, string_view alphabet, string_view notches = {});
     Rotor & insertRotor(std::size_t idx, Rotor::Standard r);
     void removeRotor(std::size_t idx);
 
