@@ -124,14 +124,16 @@ Enigma::Machine Enigma::Machine::build(Standard machine, ORotorType r1, ORotorTy
 
     const auto & machineTemplate = _machineTemplates.at(machine);
     const auto allR              = { r1, r2, r3, r4, r5 };
+    int i = 0;
     for (const auto & r : allR)
     {
+        ++i;
         if (!r.has_value())
             continue;
 
         const auto & allowedValues = machineTemplate.allowedValues;
         if (std::find(allowedValues.begin(), allowedValues.end(), r.value()) == allowedValues.end())
-            throw std::invalid_argument("r argument contains an invalid value for this machine type");
+            throw std::invalid_argument("r" + std::to_string(i) + " argument contains an invalid value for this machine type");
 
         // Use visitor pattern to easily set either a reflector or a rotor
         // Will throw aan exception if an invalid value is provided
