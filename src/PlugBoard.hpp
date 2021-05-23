@@ -16,8 +16,8 @@ public:
         operator value_type() const { return board.map(value); }
         Plug & operator=(value_type v);
 
-        PlugBoard & board;
-        value_type  value;
+        PlugBoard &      board;
+        const value_type value;
     };
 
 public:
