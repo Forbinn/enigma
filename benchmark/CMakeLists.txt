@@ -1,3 +1,6 @@
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(benchmark REQUIRED)
 include_directories(${enigma_SOURCE_DIR}/src
                     ${benchmark_INCLUDE_DIRS})

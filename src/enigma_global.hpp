@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 #if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) || defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #  define Q_DECL_EXPORT __declspec(dllexport)
@@ -18,6 +19,7 @@
 
 namespace Enigma
 {
-    using string     = std::string;
-    using value_type = typename string::value_type;
+    using string      = std::string;
+    using string_view = std::string_view;
+    using value_type  = typename string::value_type;
 } // !namespace Enigma

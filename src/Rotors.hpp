@@ -19,9 +19,12 @@ public:
     bool isValid() const;
 
 public:
-    Rotor & appendRotor(const string & alphabet);
-    Rotor & prependRotor(const string & alphabet);
-    Rotor & insertRotor(std::size_t idx, const string & alphabet);
+    Rotor & appendRotor(string_view alphabet, string_view notches = {});
+    Rotor & appendRotor(Rotor::Standard r);
+    Rotor & prependRotor(string_view alphabet, string_view notches = {});
+    Rotor & prependRotor(Rotor::Standard r);
+    Rotor & insertRotor(std::size_t idx, string_view alphabet, string_view notches = {});
+    Rotor & insertRotor(std::size_t idx, Rotor::Standard r);
     void removeRotor(std::size_t idx);
 
     Rotor & rotor(std::size_t idx)             { return *std::next(_rotors.begin(), static_cast<int>(idx)); }
@@ -35,7 +38,8 @@ public:
     Reflector & reflector()             { return _reflector; }
     const Reflector & reflector() const { return _reflector; }
 
-    void setReflectorAlphabet(const string & alphabet) { _reflector.setAlphabet(alphabet); }
+    void setReflectorAlphabet(string_view alphabet) { _reflector.setAlphabet(alphabet); }
+    void setReflector(Reflector::Standard r);
 
 public:
     value_type convert(value_type c);
@@ -46,9 +50,7 @@ public:
 
 private:
     void _rotateRotors();
-    void _setNewInputAlphabet(const string & alphabet);
-
-    bool _isValueInAlphabet(value_type c) const;
+    void _setNewInputAlphabet(string_view alphabet);
 
 private:
     std::size_t _getIdxOfValue(value_type c) const;

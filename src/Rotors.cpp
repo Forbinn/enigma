@@ -11,24 +11,44 @@ bool Enigma::Rotors::isValid() const
                        [](const auto & rotor){ return rotor.isValid(); });
 }
 
-Enigma::Rotor & Enigma::Rotors::appendRotor(const string & alphabet)
+Enigma::Rotor & Enigma::Rotors::appendRotor(string_view alphabet, string_view notches)
 {
-    return insertRotor(_rotors.size(), alphabet);
+    return insertRotor(_rotors.size(), alphabet, notches);
 }
 
-Enigma::Rotor & Enigma::Rotors::prependRotor(const string & alphabet)
+Enigma::Rotor & Enigma::Rotors::appendRotor(Rotor::Standard r)
 {
-    return insertRotor(0, alphabet);
+    return insertRotor(_rotors.size(), r);
 }
 
-Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, const string & alphabet)
+Enigma::Rotor & Enigma::Rotors::prependRotor(string_view alphabet, string_view notches)
 {
-    idx = std::clamp(0ul, idx, _rotors.size());
+    return insertRotor(0, alphabet, notches);
+}
+
+Enigma::Rotor & Enigma::Rotors::prependRotor(Rotor::Standard r)
+{
+    return insertRotor(0, r);
+}
+
+Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, string_view alphabet, string_view notches)
+{
+    idx = std::clamp<std::size_t>(0, idx, _rotors.size());
     if (idx == 0)
         _setNewInputAlphabet(alphabet);
 
     const auto itr = std::next(_rotors.begin(), static_cast<container::iterator::difference_type>(idx));
-    return *_rotors.emplace(itr, alphabet);
+    return *_rotors.emplace(itr, alphabet, notches);
+}
+
+Enigma::Rotor & Enigma::Rotors::insertRotor(std::size_t idx, Rotor::Standard r)
+{
+    idx = std::clamp<std::size_t>(0, idx, _rotors.size());
+    if (idx == 0)
+        _setNewInputAlphabet(Rotor::alphabetOfStandardRotor(r));
+
+    const auto itr = std::next(_rotors.begin(), static_cast<container::iterator::difference_type>(idx));
+    return *_rotors.emplace(itr, r);
 }
 
 void Enigma::Rotors::removeRotor(std::size_t idx)
@@ -39,17 +59,22 @@ void Enigma::Rotors::removeRotor(std::size_t idx)
     _rotors.erase(std::next(_rotors.begin(), static_cast<container::iterator::difference_type>(idx)));
 }
 
+void Enigma::Rotors::setReflector(Reflector::Standard r)
+{
+    _reflector = Reflector(r);
+}
+
 Enigma::value_type Enigma::Rotors::convert(value_type c)
 {
     if (!isValid())
         return {};
 
-    if (!_isValueInAlphabet(c))
+    auto idx = _getIdxOfValue(c);
+    if (idx == string::npos)
         return c;
 
     _rotateRotors();
 
-    auto idx = _getIdxOfValue(c);
     for (auto itr = _rotors.begin(); itr != _rotors.end(); ++itr)
         idx = itr->convertTo(idx);
 
@@ -87,15 +112,10 @@ void Enigma::Rotors::_rotateRotors()
     }
 }
 
-void Enigma::Rotors::_setNewInputAlphabet(const Enigma::string & alphabet)
+void Enigma::Rotors::_setNewInputAlphabet(string_view alphabet)
 {
     _inputAlphabet = alphabet;
     std::sort(_inputAlphabet.begin(), _inputAlphabet.end());
-}
-
-bool Enigma::Rotors::_isValueInAlphabet(Enigma::value_type c) const
-{
-    return _inputAlphabet.find(c) != string::npos;
 }
 
 std::size_t Enigma::Rotors::_getIdxOfValue(value_type c) const

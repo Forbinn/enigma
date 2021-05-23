@@ -2,6 +2,9 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestMachine);
 
+using ROS = Enigma::Rotor::Standard;
+using RES = Enigma::Reflector::Standard;
+
 void TestMachine::setUp()
 {
     _m321.rotors().appendRotor("BDFHJLCPRTXVZNYEIWGAKMUSQO").setNotches({21});
@@ -104,4 +107,44 @@ void TestMachine::testConvertString()
 
     CPPUNIT_ASSERT_EQUAL(Enigma::string("EDHR WKNAURO DCUYLJAJ UCJITKVMS BHDPGRQ OFECU GWA WTOSCZ ZT DQG WSTKEC QJHFJOQ. BRXFHMYOUHPYJ JFN IVN MAP YIGLQAK NQDAXNMB CZNMGVXE UXLNWO YJAN CLJHAFC GSO YOQHYZZ RHRFYPXA ZP WUTS CKRNY, RTS JZHC VVXUXGR WPG FKH VOYIXLCW ZNCDQR."),
                          _m456.convert( "THIS ARTICLE CONTAINS TECHNICAL DETAILS ABOUT THE ROTORS OF THE ENIGMA MACHINE. UNDERSTANDING THE WAY THE MACHINE ENCRYPTS REQUIRES TAKING INTO ACCOUNT THE CURRENT POSITION OF EACH ROTOR, THE RING SETTING AND ITS INTERNAL WIRING."));
+}
+
+void TestMachine::testDefaultMachine()
+{
+    auto m3   = Enigma::Machine::build(Enigma::Machine::Standard::M3);
+    auto m3_4 = Enigma::Machine::build(Enigma::Machine::Standard::M3, ROS::M3_IV, ROS::M3_V, ROS::M3_VI);
+    auto m3_4C = Enigma::Machine::build(Enigma::Machine::Standard::M3, RES::M3_UKW_C, ROS::M3_IV, ROS::M3_V, ROS::M3_VI);
+
+    auto z = Enigma::Machine::build(Enigma::Machine::Standard::Z);
+
+    CPPUNIT_ASSERT(m3.isValid());
+    CPPUNIT_ASSERT_EQUAL('F', m3.convert('A'));
+
+    CPPUNIT_ASSERT(m3_4.isValid());
+    CPPUNIT_ASSERT_EQUAL('U', m3_4.convert('A'));
+
+    CPPUNIT_ASSERT(m3_4C.isValid());
+    CPPUNIT_ASSERT_EQUAL('D', m3_4C.convert('A'));
+
+    CPPUNIT_ASSERT(z.isValid());
+    CPPUNIT_ASSERT_EQUAL('5', z.convert('0'));
+}
+
+void TestMachine::testInvalidDefaultMachine()
+{
+    using EM  = Enigma::Machine;
+    using EMS = EM::Standard;
+
+    CPPUNIT_ASSERT_THROW_MESSAGE("Invalid reflector",
+                                 EM::build(EMS::D, RES::G_UKW),
+                                 std::invalid_argument);
+    CPPUNIT_ASSERT_THROW_MESSAGE("Invalid rotors",
+                                 EM::build(EMS::D, ROS::G_I, ROS::G_II, ROS::G_III),
+                                 std::invalid_argument);
+    CPPUNIT_ASSERT_THROW_MESSAGE("Not enough rotor",
+                                 EM::build(EMS::D, ROS::G_I, ROS::G_II),
+                                 std::invalid_argument);
+    CPPUNIT_ASSERT_THROW_MESSAGE("Too much rotor",
+                                 EM::build(EMS::M3, ROS::M3_I, ROS::M3_II, ROS::M3_III, ROS::M3_IV),
+                                 std::invalid_argument);
 }
