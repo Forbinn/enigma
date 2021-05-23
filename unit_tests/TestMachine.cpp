@@ -2,6 +2,9 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestMachine);
 
+using ROS = Enigma::Rotor::Standard;
+using RES = Enigma::Reflector::Standard;
+
 void TestMachine::setUp()
 {
     _m321.rotors().appendRotor("BDFHJLCPRTXVZNYEIWGAKMUSQO").setNotches({21});
@@ -108,9 +111,6 @@ void TestMachine::testConvertString()
 
 void TestMachine::testDefaultMachine()
 {
-    using ROS = Enigma::Rotor::Standard;
-    using RES = Enigma::Reflector::Standard;
-
     auto m3   = Enigma::Machine::build(Enigma::Machine::Standard::M3);
     auto m3_4 = Enigma::Machine::build(Enigma::Machine::Standard::M3, ROS::M3_IV, ROS::M3_V, ROS::M3_VI);
     auto m3_4C = Enigma::Machine::build(Enigma::Machine::Standard::M3, RES::M3_UKW_C, ROS::M3_IV, ROS::M3_V, ROS::M3_VI);
@@ -128,4 +128,23 @@ void TestMachine::testDefaultMachine()
 
     CPPUNIT_ASSERT(z.isValid());
     CPPUNIT_ASSERT_EQUAL('5', z.convert('0'));
+}
+
+void TestMachine::testInvalidDefaultMachine()
+{
+    using EM  = Enigma::Machine;
+    using EMS = EM::Standard;
+
+    CPPUNIT_ASSERT_THROW_MESSAGE("Invalid reflector",
+                                 EM::build(EMS::D, RES::G_UKW),
+                                 std::invalid_argument);
+    CPPUNIT_ASSERT_THROW_MESSAGE("Invalid rotors",
+                                 EM::build(EMS::D, ROS::G_I, ROS::G_II, ROS::G_III),
+                                 std::invalid_argument);
+    CPPUNIT_ASSERT_THROW_MESSAGE("Not enough rotor",
+                                 EM::build(EMS::D, ROS::G_I, ROS::G_II),
+                                 std::invalid_argument);
+    CPPUNIT_ASSERT_THROW_MESSAGE("Too much rotor",
+                                 EM::build(EMS::M3, ROS::M3_I, ROS::M3_II, ROS::M3_III, ROS::M3_IV),
+                                 std::invalid_argument);
 }
