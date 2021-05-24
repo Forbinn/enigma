@@ -59,4 +59,7 @@ void TestReflector::testNoOpRotation()
     const auto enc = _r.convert(0);
     CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
     CPPUNIT_ASSERT_EQUAL(enc, _r.convert(0));
+
+    _r.setRotation(1);
+    CPPUNIT_ASSERT_EQUAL(0ul, _r.rotation());
 }

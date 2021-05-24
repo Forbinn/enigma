@@ -54,6 +54,7 @@ public:
     bool isValid() const override;
 
 public:
+    void setRotation(std::size_t) override {}
     bool rotate(bool = true) override;
 
 public:

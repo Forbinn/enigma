@@ -118,7 +118,7 @@ public:
     bool isInNotchPosition() const;
 
 public:
-    void setRotation(std::size_t rotation);
+    virtual void setRotation(std::size_t rotation);
     std::size_t rotation() const { return _rotation; }
     virtual bool rotate(bool forward = true);
 
