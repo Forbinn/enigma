@@ -48,7 +48,7 @@ void Enigma::Rotor::setAlphabet(string_view alphabet, string_view notches)
 
     for (const auto & notch : notches)
     {
-        const auto notchIdx = alphabet.find(notch);
+        const auto notchIdx = sortedAlphabet.find(notch);
         if (notchIdx != string::npos)
             addNotch(notchIdx);
     }
